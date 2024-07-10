@@ -19,7 +19,9 @@ export default async function RootLayout({children}) {
               className="text-zinc-950 antialiased lg:bg-zinc-100 dark:bg-zinc-900 dark:text-white dark:lg:bg-zinc-950"
         >
         <body>
-        <ApplicationLayout events={events}>{children}</ApplicationLayout>
+        <ApplicationLayout events={events}>
+            {children}
+        </ApplicationLayout>
         </body>
         </html>
     )
