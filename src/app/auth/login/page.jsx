@@ -3,16 +3,42 @@ import {Heading, Subheading} from "@/components/heading";
 import {Input} from "@/components/input";
 import {Button} from "@/components/button";
 import {useRouter} from "next/navigation";
+import {useDispatch, useSelector} from "react-redux";
+import {AuthState, loginApi} from "@/app/redux/authReducer/authReducer";
+import {useEffect} from "react";
+import {refreshKey, tokenKey} from "@/app/utils/constants";
 import {setClientCookie} from "@/app/utils/clientCookie";
-import {tokenKey} from "@/app/utils/constants";
+import jwtDecode from 'jsonwebtoken/decode';
 
 export default function Login() {
     const router = useRouter();
+    const dispatch = useDispatch()
+
+    const {Login} = useSelector(AuthState)
+
+    const setToken = (key, token) => {
+        const decodedToken = jwtDecode(token);
+        const expireTime = decodedToken.exp ? (decodedToken.exp - Math.floor(Date.now() / 1000)) / (24 * 60 * 60) : 7;
+        setClientCookie(key, token, expireTime);
+    }
+
+    useEffect(() => {
+        if (Login.data) {
+            setToken(tokenKey, Login.data.access_token)
+            setToken(refreshKey, Login.data.refresh_token)
+            router.push("/home")
+        }
+    }, [Login.data]);
+
     const onSubmit = (event) => {
-        event.preventDefault()
-        event.stopPropagation()
-        setClientCookie(tokenKey, "meow", 7)
-        router.push("/home")
+        event.preventDefault();
+        event.stopPropagation();
+        const formData = new FormData(event.target);
+        const data = {
+            email: formData.get('username'),
+            password: formData.get('password')
+        };
+        dispatch(loginApi(data))
     }
 
     return (
@@ -24,7 +50,7 @@ export default function Login() {
                         <Subheading>Username</Subheading>
                     </div>
                     <div className="pt-1">
-                        <Input aria-label="Username" name="username"/>
+                        <Input aria-label="Username" name="username" required/>
                     </div>
                 </div>
                 <div>
@@ -32,14 +58,13 @@ export default function Login() {
                         <Subheading>Password</Subheading>
                     </div>
                     <div className="pt-1">
-                        <Input aria-label="Password" name="password" type="password"/>
+                        <Input aria-label="Password" name="password" type="password" required/>
                     </div>
                 </div>
                 <div className="flex justify-end gap-4 cursor-pointer">
                     <Button type="submit">Login</Button>
                 </div>
             </form>
-
         </div>
     )
 }

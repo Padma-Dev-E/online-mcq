@@ -6,6 +6,7 @@
  * Time: 21:50:25
  * Project: sh_mcq_web_next
  */
+'use client'
 import {createSlice} from "@reduxjs/toolkit";
 import apiService from "../../api/apiService";
 import {endPoints} from "../../api/endpoints";
@@ -13,7 +14,12 @@ import {createAPIAsyncReducers, formatAxiosErrorMessage} from "@/app/redux/redux
 
 const initialAuthState = {
     isAuthenticated: false,
-    login: {
+    Login: {
+        isLoading: false,
+        data: null,
+        error: null,
+    },
+    Logout: {
         isLoading: false,
         data: null,
         error: null,
@@ -26,7 +32,8 @@ export const authSlice = createSlice({
         ...initialAuthState,
     },
     reducers: {
-        ...createAPIAsyncReducers('Login', initialAuthState.login),
+        ...createAPIAsyncReducers('Login', initialAuthState.Login),
+        ...createAPIAsyncReducers('Logout', initialAuthState.Logout),
     },
 });
 
@@ -40,11 +47,27 @@ export const loginApi = (data) => async (dispatch) => {
         );
 };
 
+export const logoutApi = (data) => async (dispatch) => {
+    dispatch(LogoutRequesting());
+    apiService
+        .post(endPoints.auth.logout, data)
+        .then((response) => dispatch(LogoutSuccess(response.data)))
+        .catch((error) =>
+            dispatch(LogoutError(formatAxiosErrorMessage(error)))
+        );
+};
+
 export const {
     LoginRequesting,
     LoginSuccess,
     LoginError,
-    LoginReset
+    LoginReset,
+
+    LogoutRequesting,
+    LogoutSuccess,
+    LogoutError,
+    LogoutReset,
+
 } = authSlice.actions;
-export const authState = (state) => state.auth;
+export const AuthState = (state) => state.auth;
 export default authSlice.reducer;

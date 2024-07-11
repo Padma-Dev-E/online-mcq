@@ -7,15 +7,29 @@
  * Project: sh_mcq_web_next
  */
 'use client'
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Heading, Subheading} from "@/components/heading";
 import {Divider} from "@/components/divider";
 import {Text} from "@/components/text";
 import {Input} from "@/components/input";
 import {Button} from "@/components/button";
 import {ClientTimeStampToServerTimeStamp} from "@/app/utils/helper";
+import {useDispatch, useSelector} from "react-redux";
+import {createExamApi, ExamCreateReset, ExamState} from "@/app/redux/examReducer/examReducer";
+import {useRouter} from "next/navigation";
 
 export default function Page() {
+    const dispatch = useDispatch()
+    const router = useRouter()
+    const {ExamCreate} = useSelector(ExamState)
+
+    useEffect(() => {
+        if (ExamCreate.data) {
+            router.push(`/home/exam/${ExamCreate.data.id}/`)
+            dispatch(ExamCreateReset())
+        }
+    }, [ExamCreate.data]);
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
@@ -23,7 +37,7 @@ export default function Page() {
         if (data.start_time) {
             data.start_time = ClientTimeStampToServerTimeStamp(data.start_time);
         }
-        console.log(JSON.stringify(data, null, 2));
+        dispatch(createExamApi(data))
     };
 
     const getCurrentDateTime = () => {

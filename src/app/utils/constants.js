@@ -32,6 +32,7 @@ export const MAX_MOBILE = 10;
 
 // Key Constants
 export const tokenKey = "token";
+export const examTokenKey = "exam";
 export const visionKey = "tempVision";
 export const refreshKey = "refresh";
 

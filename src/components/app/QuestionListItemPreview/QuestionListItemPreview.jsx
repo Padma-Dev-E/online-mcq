@@ -4,34 +4,34 @@ import {Heading, Subheading} from "@/components/heading";
 import {Radio, RadioField, RadioGroup} from "@/components/radio";
 import {Label} from "@/components/fieldset";
 
-export const QuestionListItemPreview = memo(({showAnswer = false}) => {
+export const QuestionListItemPreview = memo(({item, idx, showAnswer = false}) => {
     return (<div className={""}>
-        <Heading>1. What is your favorite color ?</Heading>
+        <Heading>{idx + 1}. {item.question}</Heading>
         <RadioGroup className={"grid md:grid-cols-2 mt-4"}>
             <RadioField>
-                <Radio name={"o1"}/>
-                <Label>Red</Label>
+                <Radio name={"o1"} checked={false}/>
+                <Label>{item.options.optionA}</Label>
             </RadioField>
 
             <RadioField>
                 <Radio name={"o1"}/>
-                <Label>Black</Label>
+                <Label>{item.options.optionB}</Label>
             </RadioField>
 
             <RadioField>
                 <Radio name={"o1"}/>
-                <Label>White</Label>
+                <Label>{item.options.optionC}</Label>
             </RadioField>
 
             <RadioField>
                 <Radio name={"o1"}/>
-                <Label>Green</Label>
+                <Label>{item.options.optionD}</Label>
             </RadioField>
         </RadioGroup>
 
         {showAnswer &&
             <div className={"mt-4"}>
-                <Subheading>Answer : Red</Subheading>
+                <Subheading>Answer : {item.options[item.answer]}</Subheading>
             </div>
         }
 

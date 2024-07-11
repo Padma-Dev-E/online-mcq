@@ -7,12 +7,12 @@
  * Project: sh_mcq_web_next
  */
 'use client'
-
-import {getCookie} from "../utils/clientCookie";
-import {tokenKey} from "../utils/constants";
+import {examTokenKey, tokenKey} from "../utils/constants";
 import axios from "axios";
+import {getClientCookie} from "@/app/utils/clientCookie";
 
-export const base_url = `${process.env.NEXT_PUBLIC_BASE_SERVER_URL}${process.env.NEXT_PUBLIC_BASE_SERVER_URL_VERSION}`;
+// export const base_url = `${process.env.NEXT_PUBLIC_BASE_SERVER_URL}`;
+export const base_url = `http://localhost:8000`;
 
 
 const apiService = () => {
@@ -22,10 +22,14 @@ const apiService = () => {
             "Content-Type": "application/json",
         },
     };
+    console.log(defaultOptions)
     let instance = axios.create(defaultOptions);
     instance.interceptors.request.use(function (config) {
-        if (getCookie(tokenKey) !== null) {
-            config.headers.Authorization = `Bearer ${getCookie(tokenKey)}`;
+        if (getClientCookie(tokenKey) !== null && getClientCookie(examTokenKey) === null) {
+            config.headers.Authorization = `Bearer ${getClientCookie(tokenKey)}`;
+        }
+        if (getClientCookie(examTokenKey) !== null) {
+            config.headers.Authorization = `Bearer ${getClientCookie(examTokenKey)}`;
         }
         return config;
     });

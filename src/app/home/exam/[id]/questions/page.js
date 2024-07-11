@@ -1,32 +1,39 @@
 'use client'
 import {Badge} from '@/components/badge'
 import {Heading, Subheading} from '@/components/heading'
-import {Link} from '@/components/link'
 import {ChevronLeftIcon} from '@heroicons/react/16/solid'
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import {QuestionListItemPreview} from "@/components/app/QuestionListItemPreview/QuestionListItemPreview";
 import {Divider} from "@/components/divider";
 import {Checkbox, CheckboxField} from "@/components/checkbox";
 import {Label} from "@/components/fieldset";
 import {Button} from "@/components/button";
+import {useDispatch, useSelector} from "react-redux";
+import {ExamState, listQuestionApi} from "@/app/redux/examReducer/examReducer";
 
 export default function page({params}) {
-
     const router = useRouter()
+    const {id} = params
+    const dispatch = useDispatch()
+    const {QuestionList} = useSelector(ExamState)
 
     useEffect(() => {
         document.title = "Questions";
+        dispatch(listQuestionApi(id))
     }, []);
+
+    const [showAnswers, setShowAnswers] = useState(false);
 
     return (
         <>
             <div className="max-lg:hidden">
-                <Link href="/events"
-                      className="inline-flex items-center gap-2 text-sm/6 text-zinc-500 dark:text-zinc-400">
+                <div
+                    className="inline-flex items-center gap-2 text-sm/6 text-zinc-500 dark:text-zinc-400 cursor-pointer"
+                    onClick={() => router.back()}>
                     <ChevronLeftIcon className="size-4 fill-zinc-400 dark:fill-zinc-500"/>
-                    Exams
-                </Link>
+                    Back
+                </div>
             </div>
             <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-6">
@@ -44,9 +51,11 @@ export default function page({params}) {
                     </div>
                 </div>
                 <div className="flex gap-4">
-                    <Button onClick={() => router.push("/home/exam/asdad/questions/create")}>Add question</Button>
+                    <Button onClick={() => router.push(`/home/exam/${id}/questions/create`)}>Add question</Button>
                     <CheckboxField>
-                        <Checkbox name="email_is_public" defaultChecked/>
+                        <Checkbox name="email_is_public" checked={showAnswers} onChange={() => {
+                            setShowAnswers(old => !old)
+                        }}/>
                         <Label>Show answers</Label>
                     </CheckboxField>
                 </div>
@@ -54,9 +63,9 @@ export default function page({params}) {
 
             <Subheading className="mt-12">Questions</Subheading>
             <div className={"mt-4"}>
-                <QuestionListItemPreview/>
-                <Divider className="my-10" soft/>
-                <QuestionListItemPreview/>
+                {QuestionList.data?.map((question,idx) => {
+                    return <><QuestionListItemPreview showAnswer={showAnswers} item={question} idx={idx}/><Divider className="my-10" soft/></>
+                })}
             </div>
         </>
     )

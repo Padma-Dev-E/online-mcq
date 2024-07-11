@@ -6,13 +6,12 @@ import {Heading, Subheading} from '@/components/heading'
 import {Link} from '@/components/link'
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/table'
 import {ChevronLeftIcon} from '@heroicons/react/16/solid'
-import React, {useEffect} from "react";
+import {useEffect} from "react";
 import {useRouter} from "next/navigation";
 
 export default function page({params}) {
 
     const router = useRouter()
-    const {id} = params
 
     useEffect(() => {
         document.title = "New Page Title";
@@ -21,12 +20,11 @@ export default function page({params}) {
     return (
         <>
             <div className="max-lg:hidden">
-                <div
-                    className="inline-flex items-center gap-2 text-sm/6 text-zinc-500 dark:text-zinc-400 cursor-pointer"
-                    onClick={() => router.back()}>
+                <Link href="/events"
+                      className="inline-flex items-center gap-2 text-sm/6 text-zinc-500 dark:text-zinc-400">
                     <ChevronLeftIcon className="size-4 fill-zinc-400 dark:fill-zinc-500"/>
-                    Back
-                </div>
+                    Exams
+                </Link>
             </div>
             <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-6">
@@ -47,20 +45,6 @@ export default function page({params}) {
                     <Button outline>Edit</Button>
                     <Button>View</Button>
                 </div>
-            </div>
-            <div className="mt-8 grid gap-8 sm:grid-cols-3">
-                <Stat title="Duration"
-                      value={"60 min"}
-                    // change={1000}
-                />
-                <div className={"cursor-pointer"} onClick={() => router.push(`/home/exam/${id}/questions`)}>
-                    <Stat
-                        title="Question"
-                        value={100}
-                        // change={1000}
-                    />
-                </div>
-                <Stat title="Candidate" value={47}/>
             </div>
             <Subheading className="mt-12">Top rankers</Subheading>
             <Table className="mt-4 [--gutter:theme(spacing.6)] lg:[--gutter:theme(spacing.10)]">

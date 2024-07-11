@@ -2,6 +2,7 @@ import {getEvents} from '@/data'
 import '@/styles/tailwind.css'
 
 import {ApplicationLayout} from './application-layout'
+import Providers from "@/app/redux/provider";
 
 export const metadata = {
     title: {
@@ -19,9 +20,11 @@ export default async function RootLayout({children}) {
               className="text-zinc-950 antialiased lg:bg-zinc-100 dark:bg-zinc-900 dark:text-white dark:lg:bg-zinc-950"
         >
         <body>
-        <ApplicationLayout events={events}>
-            {children}
-        </ApplicationLayout>
+        <Providers>
+            <ApplicationLayout events={events} isAdmin={true}>
+                {children}
+            </ApplicationLayout>
+        </Providers>
         </body>
         </html>
     )

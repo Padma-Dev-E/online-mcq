@@ -14,7 +14,7 @@ export const createAPIAsyncReducers = (key, init) => ({
     }, [`${key}Success`]: (state, action) => {
         state[key].isLoading = false;
         state[key].error = null;
-        state[key].data = action.payload.data;
+        state[key].data = action.payload;
     }, [`${key}Error`]: (state, action) => {
         state[key].isLoading = false;
         state[key].error = action.payload;

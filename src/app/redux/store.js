@@ -9,10 +9,12 @@
 'use client';
 import {configureStore} from "@reduxjs/toolkit";
 import authReducer from "@/app/redux/authReducer/authReducer";
+import examReducer from "@/app/redux/examReducer/examReducer";
 
 export default configureStore({
     reducer: {
         auth: authReducer,
+        exam: examReducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false,}),
 });

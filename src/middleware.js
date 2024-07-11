@@ -1,24 +1,22 @@
-/**
- * Created by Kittxdev www.kittxdev.com
- * Developer: Padma Dev.E
- * Developer Contact: padmadev@kittxdev.com
- * Date: 10/07/24
- * Time: 21:14:09
- * Project: javascript
- */
 import {NextResponse} from 'next/server';
-import {tokenKey} from '@/app/utils/constants';
+import {examTokenKey, tokenKey} from '@/app/utils/constants';
 
 export function middleware(request) {
     const token = getCookieFromRequest(request, tokenKey);
-    console.log(token)
+    const examToken = getCookieFromRequest(request, examTokenKey);
     const {pathname} = request.nextUrl;
+
+    const examJoinMatch = pathname.match(/^\/exam\/([^/]+)\/join$/);
 
     if (token && pathname === '/auth/login') {
         return NextResponse.redirect(new URL('/home', request.url));
     }
 
-    if (!token && pathname !== '/auth/login' && pathname !== '/live') {
+    if (!token && pathname !== '/auth/login' && pathname !== '/exam' && !examJoinMatch && !pathname.startsWith('/exam')) {
+        return NextResponse.redirect(new URL('/auth/login', request.url));
+    }
+
+    if (pathname.startsWith('/exam') && !examJoinMatch && !examToken) {
         return NextResponse.redirect(new URL('/auth/login', request.url));
     }
 
@@ -40,9 +38,8 @@ function getCookieFromRequest(request, name) {
 
 export const config = {
     matcher: [
-        '/home',
+        '/home/:path*',
         '/auth/login',
-        '/live/:path*',
+        '/exam/:path*',
     ],
 };
-

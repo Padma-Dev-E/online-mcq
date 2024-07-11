@@ -7,21 +7,39 @@
  * Project: sh_mcq_web_next
  */
 'use client'
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Heading, Subheading} from "@/components/heading";
 import {Divider} from "@/components/divider";
 import {Input} from "@/components/input";
 import {Button} from "@/components/button";
 import {ClientTimeStampToServerTimeStamp} from "@/app/utils/helper";
-import {Link} from "@/components/link";
 import {ChevronLeftIcon} from "@heroicons/react/16/solid";
 import {Badge} from "@/components/badge";
 import {Checkbox, CheckboxField} from "@/components/checkbox";
 import {Label} from "@/components/fieldset";
 import {Textarea} from "@/components/textarea";
 import {Select} from "@/components/select";
+import {useRouter} from "next/navigation";
+import {useDispatch, useSelector} from "react-redux";
+import {createQuestionApi, ExamState, QuestionCreateReset} from "@/app/redux/examReducer/examReducer";
 
-export default function Page() {
+
+export default function Page({params}) {
+    const router = useRouter();
+
+    const dispatch = useDispatch()
+
+    const {id} = params
+
+    const {QuestionCreate} = useSelector(ExamState)
+
+    useEffect(() => {
+        if (QuestionCreate.data) {
+            dispatch(QuestionCreateReset())
+            router.push(`/home/exam/${id}/questions`)
+        }
+    }, [QuestionCreate.data]);
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
@@ -29,25 +47,31 @@ export default function Page() {
         if (data.start_time) {
             data.start_time = ClientTimeStampToServerTimeStamp(data.start_time);
         }
-        console.log(JSON.stringify(data, null, 2));
-    };
 
-    const getCurrentDateTime = () => {
-        const now = new Date();
-        const offset = now.getTimezoneOffset();
-        const localISOTime = new Date(now.getTime() - (offset * 60 * 1000)).toISOString().slice(0, 16);
-        return localISOTime;
+        const payload = {
+            question: data.question,
+            options: {
+                optionA: data.optionA,
+                optionB: data.optionB,
+                optionC: data.optionC,
+                optionD: data.optionD
+            },
+            answer: data.answer,
+            exam_id: id
+        }
+        dispatch(createQuestionApi(payload))
     };
 
 
     return (
         <>
             <div className="max-lg:hidden">
-                <Link href="/events"
-                      className="inline-flex items-center gap-2 text-sm/6 text-zinc-500 dark:text-zinc-400">
+                <div
+                    className="inline-flex items-center gap-2 text-sm/6 text-zinc-500 dark:text-zinc-400 cursor-pointer"
+                    onClick={() => router.back()}>
                     <ChevronLeftIcon className="size-4 fill-zinc-400 dark:fill-zinc-500"/>
-                    Exams
-                </Link>
+                    Back
+                </div>
             </div>
             <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-6">
@@ -81,7 +105,7 @@ export default function Page() {
                     <div>
                         <Subheading>Question</Subheading>
                         <div className={"mt-4"}>
-                            <Textarea aria-label="Exam Title" name="exam_name" required/>
+                            <Textarea aria-label="Exam Title" name="question" required/>
                         </div>
                     </div>
                 </section>
@@ -92,26 +116,26 @@ export default function Page() {
                     <div>
                         <Subheading>Option A</Subheading>
                         <div className={"mt-4"}>
-                            <Input name="start_time" required/>
+                            <Input name="optionA" required/>
                         </div>
                     </div>
                     <div>
                         <Subheading>Option B</Subheading>
                         <div className={"mt-4"}>
-                            <Input name="start_time" required/>
+                            <Input name="optionB" required/>
                         </div>
                     </div>
 
                     <div>
                         <Subheading>Option C</Subheading>
                         <div className={"mt-4"}>
-                            <Input name="start_time" required/>
+                            <Input name="optionC" required/>
                         </div>
                     </div>
                     <div>
                         <Subheading>Option D</Subheading>
                         <div className={"mt-4"}>
-                            <Input name="start_time" required/>
+                            <Input name="optionD" required/>
                         </div>
                     </div>
                 </section>
@@ -122,10 +146,12 @@ export default function Page() {
                     <div>
                         <Subheading>Answer</Subheading>
                         <div className={"mt-4"}>
-                            <Select>
+                            <Select name="answer" required>
                                 <option selected disabled>Select answer</option>
-                                <option value="cad">CAD - Canadian Dollar</option>
-                                <option value="usd">USD - United States Dollar</option>
+                                <option value="optionA">Option A</option>
+                                <option value="optionB">Option B</option>
+                                <option value="optionC">Option C</option>
+                                <option value="optionD">Option D</option>
                             </Select>
                         </div>
                     </div>
