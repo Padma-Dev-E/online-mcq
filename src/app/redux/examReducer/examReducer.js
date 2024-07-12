@@ -56,6 +56,11 @@ const initialExamState = {
         data: null,
         error: null,
     },
+    ExamDetails: {
+        isLoading: false,
+        data: null,
+        error: null,
+    },
 };
 
 export const examSlice = createSlice({
@@ -71,6 +76,7 @@ export const examSlice = createSlice({
         ...createAPIAsyncReducers('JoinExam', initialExamState.JoinExam),
         ...createAPIAsyncReducers('MyQuestion', initialExamState.MyQuestion),
         ...createAPIAsyncReducers('AnswerQuestion', initialExamState.AnswerQuestion),
+        ...createAPIAsyncReducers('ExamDetails', initialExamState.ExamDetails),
     },
 });
 
@@ -158,6 +164,18 @@ export const AnswerQuestionApi = (data) => async (dispatch) => {
         );
 };
 
+export const ExamDetailsApi = (data) => async (dispatch) => {
+    dispatch(AnswerQuestionRequesting());
+    apiService
+        .post(endPoints.question.answer, data)
+        .then((response) => {
+            dispatch(AnswerQuestionSuccess(response.data))
+        })
+        .catch((error) =>
+            dispatch(AnswerQuestionError(formatAxiosErrorMessage(error)))
+        );
+};
+
 
 export const {
     ExamListRequesting,
@@ -194,6 +212,11 @@ export const {
     AnswerQuestionSuccess,
     AnswerQuestionError,
     AnswerQuestionReset,
+
+    ExamDetailsRequesting,
+    ExamDetailsSuccess,
+    ExamDetailsError,
+    ExamDetailsReset,
 
 } = examSlice.actions;
 export const ExamState = (state) => state.exam;

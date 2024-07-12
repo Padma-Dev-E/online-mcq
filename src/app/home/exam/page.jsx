@@ -11,8 +11,9 @@ import {EllipsisVerticalIcon, MagnifyingGlassIcon} from '@heroicons/react/16/sol
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {ExamState, listExamApi} from "@/app/redux/examReducer/examReducer";
-import {ServerTimeStampToClientTimeStamp} from "@/app/utils/helper";
 import {useRouter} from "next/navigation";
+import {formatMinutes, ServerTimeStampToClientTimeStamp, timeLeft} from "@/app/utils/helper";
+import TimeIndicator from "@/components/timer";
 
 
 export default function page() {
@@ -38,9 +39,10 @@ export default function page() {
                         </div>
                         <div>
                             <Select name="sort_by">
-                                <option value="name">Sort by name</option>
-                                <option value="date">Sort by date</option>
-                                <option value="status">Sort by status</option>
+                                <option value="name">All</option>
+                                <option value="name">Completed</option>
+                                <option value="status">OnGoing</option>
+                                <option value="date">Active</option>
                             </Select>
                         </div>
                     </div>
@@ -60,13 +62,23 @@ export default function page() {
                                         <div className="text-base/6 font-semibold">
                                             <Link href={`/home/exam/${event.id}/`}>{event.exam_name}</Link>
                                         </div>
-                                        <div
-                                            className="text-xs/6 text-zinc-500">{new Date(ServerTimeStampToClientTimeStamp(event.start_time)).toLocaleString()}</div>
+                                        <div className="text-xs/6 text-zinc-500 flex flex-wrap gap-2">
+                                            <span>
+                                                Duration : {formatMinutes(event.duration)}
+                                            </span>
+                                            {event.status === "ongoing" &&
+                                                <span>Start Time
+                                                : {new Date(ServerTimeStampToClientTimeStamp(event.start_time)).toLocaleString()}</span>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-4">
+                                    {event.status === "ongoing" &&
+                                        <TimeIndicator time={timeLeft(event.start_time, event.duration)}/>
+                                    }
                                     <Badge className="max-sm:hidden"
-                                           color={event.status === 'active' ? 'lime' : 'zinc'}>
+                                           color={event.status === 'ongoing' ? 'lime' : 'zinc'}>
                                         {event.status}
                                     </Badge>
                                     <Dropdown>

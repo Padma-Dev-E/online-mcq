@@ -22,3 +22,36 @@ export const ClientTimeStampToServerTimeStamp = (clientTimeStamp) => {
     const utcTimeStamp = localDate.getTime() + (localDate.getTimezoneOffset() * 60000);
     return Math.floor(utcTimeStamp / 1000);
 }
+
+export function formatMinutes(minutes) {
+    if (isNaN(minutes) || minutes < 0) {
+        return "Invalid input";
+    }
+
+    const days = Math.floor(minutes / (24 * 60));
+    const hours = Math.floor((minutes % (24 * 60)) / 60);
+    const mins = minutes % 60;
+
+    let result = "";
+    if (days > 0) {
+        result += `${days}d `;
+    }
+    if (hours > 0) {
+        result += `${hours}h `;
+    }
+    if (mins > 0) {
+        result += `${mins}m`;
+    }
+
+    return result;
+}
+
+export const timeLeft = (st, duration) => {
+    const timestamp = ServerTimeStampToClientTimeStamp(st);
+    const timestampMs = timestamp * 1000;
+    const currentDate = new Date(timestampMs);
+    currentDate.setMinutes(currentDate.getMinutes() + duration);
+    const currentTimeMs = Date.now();
+    const timeDiffMs = currentDate.getTime() - currentTimeMs;
+    return Math.ceil(timeDiffMs / (1000 * 60))
+}
