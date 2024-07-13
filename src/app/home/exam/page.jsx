@@ -8,12 +8,13 @@ import {Input, InputGroup} from '@/components/input'
 import {Link} from '@/components/link'
 import {Select} from '@/components/select'
 import {EllipsisVerticalIcon, MagnifyingGlassIcon} from '@heroicons/react/16/solid'
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {ExamState, listExamApi} from "@/app/redux/examReducer/examReducer";
 import {useRouter} from "next/navigation";
 import {formatMinutes, ServerTimeStampToClientTimeStamp, timeLeft} from "@/app/utils/helper";
 import TimeIndicator from "@/components/timer";
+import ErrorBox from "@/components/ErrorBox";
 
 
 export default function page() {
@@ -27,25 +28,12 @@ export default function page() {
 
     return (
         <>
+            {ExamList.error &&
+                <ErrorBox message={ExamList.error}/>
+            }
             <div className="flex flex-wrap items-end justify-between gap-4">
                 <div className="max-sm:w-full sm:flex-1">
                     <Heading>Exams</Heading>
-                    <div className="mt-4 flex max-w-xl gap-4">
-                        <div className="flex-1">
-                            <InputGroup>
-                                <MagnifyingGlassIcon/>
-                                <Input name="search" placeholder="Search events&hellip;"/>
-                            </InputGroup>
-                        </div>
-                        <div>
-                            <Select name="sort_by">
-                                <option value="name">All</option>
-                                <option value="name">Completed</option>
-                                <option value="status">OnGoing</option>
-                                <option value="date">Active</option>
-                            </Select>
-                        </div>
-                    </div>
                 </div>
                 <Button onClick={() => {
                     router.push("/home/exam/create/")

@@ -17,6 +17,8 @@ import {ClientTimeStampToServerTimeStamp} from "@/app/utils/helper";
 import {useDispatch, useSelector} from "react-redux";
 import {createExamApi, ExamCreateReset, ExamState} from "@/app/redux/examReducer/examReducer";
 import {useRouter} from "next/navigation";
+import ErrorBox from "@/components/ErrorBox";
+import LoadingIcon from "@/components/loading";
 
 export default function Page() {
     const dispatch = useDispatch()
@@ -49,53 +51,63 @@ export default function Page() {
 
 
     return (
-        <form method="post" className="mx-auto max-w-4xl" onSubmit={handleSubmit}>
-            <Heading>Create new exam</Heading>
-            <Divider className="my-10 mt-6"/>
+        <>
 
-            <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
-                <div className="space-y-1">
-                    <Subheading>Exam title</Subheading>
+            {ExamCreate.error &&
+                <ErrorBox message={ExamCreate.error}/>
+            }
+
+            <form method="post" className="mx-auto max-w-4xl" onSubmit={handleSubmit}>
+                <Heading>Create new exam</Heading>
+                <Divider className="my-10 mt-6"/>
+
+                <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+                    <div className="space-y-1">
+                        <Subheading>Exam title</Subheading>
+                    </div>
+                    <div>
+                        <Input aria-label="Exam Title" name="exam_name" required/>
+                    </div>
+                </section>
+
+                <Divider className="my-10" soft/>
+
+                <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+                    <div className="space-y-1">
+                        <Subheading>Exam start time</Subheading>
+                        <Text>This will only be used for displaying the start time. You have to manually start the
+                            exam.</Text>
+                    </div>
+                    <div>
+                        <Input aria-label="Exam Start Time" name="start_time" type="datetime-local"
+                               min={getCurrentDateTime()} required/>
+                    </div>
+                </section>
+
+                <Divider className="my-10" soft/>
+
+                <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+                    <div className="space-y-1">
+                        <Subheading>Exam duration</Subheading>
+                        <Text>This is the duration of the exam in minutes.</Text>
+                    </div>
+                    <div className="space-y-4">
+                        <Input type="number" aria-label="Exam Duration" name="duration" defaultValue="60" required/>
+                    </div>
+                </section>
+
+                <Divider className="my-10" soft/>
+
+                <div className="flex justify-end gap-4">
+                    <Button type="submit" disabled={ExamCreate.isLoading}>Create
+                        {ExamCreate.isLoading &&
+                            <div className={"animate-spin"}>
+                                <LoadingIcon/>
+                            </div>
+                        }
+                    </Button>
                 </div>
-                <div>
-                    <Input aria-label="Exam Title" name="exam_name" required/>
-                </div>
-            </section>
-
-            <Divider className="my-10" soft/>
-
-            <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
-                <div className="space-y-1">
-                    <Subheading>Exam start time</Subheading>
-                    <Text>This will only be used for displaying the start time. You have to manually start the
-                        exam.</Text>
-                </div>
-                <div>
-                    <Input aria-label="Exam Start Time" name="start_time" type="datetime-local"
-                           min={getCurrentDateTime()} required/>
-                </div>
-            </section>
-
-            <Divider className="my-10" soft/>
-
-            <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
-                <div className="space-y-1">
-                    <Subheading>Exam duration</Subheading>
-                    <Text>This is the duration of the exam in minutes.</Text>
-                </div>
-                <div className="space-y-4">
-                    <Input type="number" aria-label="Exam Duration" name="duration" defaultValue="60" required/>
-                </div>
-            </section>
-
-            <Divider className="my-10" soft/>
-
-            <div className="flex justify-end gap-4">
-                <Button type="reset" plain>
-                    Reset
-                </Button>
-                <Button type="submit">Create</Button>
-            </div>
-        </form>
+            </form>
+        </>
     );
 }

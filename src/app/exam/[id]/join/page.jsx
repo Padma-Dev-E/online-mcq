@@ -1,33 +1,44 @@
 'use client'
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Heading, Subheading} from "@/components/heading";
 import {Divider} from "@/components/divider";
 import {Input} from "@/components/input";
 import {Button} from "@/components/button";
-import {Badge} from "@/components/badge";
 import {useRouter} from "next/navigation";
 import {useDispatch, useSelector} from "react-redux";
-import {ExamState, joinExamApi} from "@/app/redux/examReducer/examReducer";
+import {ExamState, joinExamApi, JoinExamReset} from "@/app/redux/examReducer/examReducer";
 import jwtDecode from "jsonwebtoken/decode";
 import {setClientCookie} from "@/app/utils/clientCookie";
 import {examTokenKey} from "@/app/utils/constants";
+import ErrorBox from "@/components/ErrorBox";
 
 export default function Page({params}) {
     const router = useRouter();
     const dispatch = useDispatch();
     const {id} = params;
     const {JoinExam} = useSelector(ExamState);
+    const [ld, setLd] = useState(null);
+
+    useEffect(() => {
+        document.title = "Online MCQ";
+    }, []);
 
     const setToken = (key, token) => {
         const decodedToken = jwtDecode(token);
         const expireTime = decodedToken.exp ? (decodedToken.exp - Math.floor(Date.now() / 1000)) / (24 * 60 * 60) : 7;
         setClientCookie(key, token, expireTime);
+        setClientCookie("ld", JSON.stringify(ld), expireTime);
     }
+
 
     useEffect(() => {
         if (JoinExam.data) {
             setToken(examTokenKey, JoinExam.data.access_token)
             router.push(`/exam/${id}/`)
+        }
+
+        return () => {
+            dispatch(JoinExamReset())
         }
     }, [JoinExam.data]);
 
@@ -42,29 +53,19 @@ export default function Page({params}) {
             mobile: data.mobile,
             exam_id: id
         };
-
+        setLd(payload)
         dispatch(joinExamApi(payload));
     };
 
+    useEffect(() => {
+        console.log("-----Loaded A------")
+    }, []);
+
     return (
         <>
-            <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
-                <div className="flex flex-wrap items-center gap-6">
-                    <div className="w-32 shrink-0">
-                        <img className="aspect-[3/2] rounded-lg shadow" src={"event.imgUrl"} alt=""/>
-                    </div>
-                    <div>
-                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                            <Heading>{"Title"}</Heading>
-                            <Badge color={1 === 'On Sale' ? 'lime' : 'zinc'}>{"active"}</Badge>
-                        </div>
-                        <div className="mt-2 text-sm/6 text-zinc-500">
-                            {"event.date"} at {"event.time"} <span aria-hidden="true">·</span> {"event.location"}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            {JoinExam.error &&
+                <ErrorBox message={JoinExam.error}/>
+            }
             <form method="post" className="mx-auto mt-4" onSubmit={handleSubmit}>
                 <Heading>Join Online MCQ</Heading>
                 <Divider className="my-10 mt-6"/>

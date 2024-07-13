@@ -6,8 +6,8 @@ import Providers from "@/app/redux/provider";
 
 export const metadata = {
     title: {
-        template: '%s - Catalyst',
-        default: 'Catalyst',
+        template: '%s - Online Exam',
+        default: 'Online Exam',
     },
     description: '',
 }

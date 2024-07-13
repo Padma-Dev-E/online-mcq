@@ -34,20 +34,6 @@ export const formatAxiosErrorMessage = (error) => {
     let err_msg = "";
     try {
         if (error.response) {
-            if (
-                401 === error.response.status &&
-                window.location.pathname !== "/login"
-            ) {
-                eraseCookie(tokenKey);
-                eraseCookie(refreshKey);
-                window.location.replace(URL_LOGIN);
-            } else if (error.response.status === 404) {
-                // window.location.replace(URL_PAGE_NOT_FOUND);
-            }
-            /*
-             * The request was made and the server responded with a
-             * status code that falls out of the range of 2xx
-             */
             if ("detail" in error.response.data) {
                 err_msg = error.response.data.detail;
             } else {
@@ -67,7 +53,8 @@ export const formatAxiosErrorMessage = (error) => {
     } catch (err) {
         err_msg = "Something went wrong";
     }
-    return err_msg;
+
+    return err_msg.replace("true", "");
 };
 
 export const getErrorMessage = (error) => {

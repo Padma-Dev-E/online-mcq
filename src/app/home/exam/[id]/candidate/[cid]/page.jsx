@@ -1,5 +1,4 @@
 'use client'
-import {Stat} from '@/app/home/page'
 import {Badge} from '@/components/badge'
 import {Heading, Subheading} from '@/components/heading'
 import {ChevronLeftIcon} from '@heroicons/react/16/solid'
@@ -10,6 +9,7 @@ import {ExamCandidateDetailsApi, ExamDetailsApi, ExamState} from "@/app/redux/ex
 import {formatMinutes, ServerTimeStampToClientTimeStamp} from "@/app/utils/helper";
 import {QuestionListItemPreview} from "@/components/app/QuestionListItemPreview/QuestionListItemPreview";
 import {Divider} from "@/components/divider";
+import {Stat} from "@/components/Stat";
 
 export default function page({params}) {
 

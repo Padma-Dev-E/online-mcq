@@ -15,16 +15,16 @@ import {
 } from '@/components/sidebar'
 import {SidebarLayout} from '@/components/sidebar-layout'
 
-import {ArrowRightStartOnRectangleIcon, ChevronUpIcon,} from '@heroicons/react/16/solid'
-import {HomeIcon, Square2StackIcon,} from '@heroicons/react/20/solid'
+import {ArrowRightStartOnRectangleIcon, ChevronUpIcon, UserIcon,} from '@heroicons/react/16/solid'
+import {Square2StackIcon,} from '@heroicons/react/20/solid'
 import {usePathname, useRouter} from 'next/navigation'
 import {useDispatch, useSelector} from "react-redux";
 import {eraseClientCookie, getClientCookie} from "@/app/utils/clientCookie";
-import {refreshKey, tokenKey} from "@/app/utils/constants";
-import {AuthState, logoutApi} from "@/app/redux/authReducer/authReducer";
+import {examTokenKey, refreshKey, tokenKey} from "@/app/utils/constants";
+import {AuthState, logoutApi, UserSummaryApi} from "@/app/redux/authReducer/authReducer";
 import {useEffect} from "react";
 
-function AccountDropdownMenu({anchor}) {
+function AccountDropdownMenu({anchor, isAdmin}) {
     const dispatch = useDispatch()
     const router = useRouter()
     const payload = {refresh_token: getClientCookie(refreshKey)}
@@ -34,6 +34,8 @@ function AccountDropdownMenu({anchor}) {
         if (Logout.data) {
             eraseClientCookie(tokenKey)
             eraseClientCookie(refreshKey)
+            eraseClientCookie(examTokenKey)
+            eraseClientCookie("ld")
             router.push("/auth/login")
         }
     }, [Logout.data]);
@@ -41,7 +43,15 @@ function AccountDropdownMenu({anchor}) {
     return (
         <DropdownMenu className="min-w-64" anchor={anchor}>
             <DropdownItem onClick={() => {
-                dispatch(logoutApi(payload))
+                if (isAdmin) {
+                    dispatch(logoutApi(payload))
+                } else {
+                    eraseClientCookie(tokenKey)
+                    eraseClientCookie(refreshKey)
+                    eraseClientCookie(examTokenKey)
+                    eraseClientCookie("ld")
+                    router.push("/auth/login")
+                }
             }}>
                 <ArrowRightStartOnRectangleIcon/>
                 <DropdownLabel>Sign out</DropdownLabel>
@@ -53,19 +63,32 @@ function AccountDropdownMenu({anchor}) {
 
 export function ApplicationLayout({isAdmin = false, children}) {
     let pathname = usePathname()
+    const {UserSummary} = useSelector(AuthState)
+    const ld = JSON.parse(getClientCookie("ld"))
+    const dispatch = useDispatch()
+    useEffect(() => {
+        if (isAdmin) {
+            dispatch(UserSummaryApi())
+        }
+    }, []);
 
     return (
         <SidebarLayout
+            isAdmin={isAdmin}
             navbar={
                 <Navbar>
                     <NavbarSpacer/>
                     <NavbarSection>
-                        <Dropdown>
-                            <DropdownButton as={NavbarItem}>
-                                <Avatar src="/users/erica.jpg" square/>
-                            </DropdownButton>
-                            <AccountDropdownMenu anchor="bottom end"/>
-                        </Dropdown>
+                        {(ld || isAdmin) &&
+                            <Dropdown>
+                                <DropdownButton as={NavbarItem}>
+                                    <div>
+                                        <UserIcon className={"stroke-amber-50"} style={{height: 30, width: 30}}/>
+                                    </div>
+                                </DropdownButton>
+                                <AccountDropdownMenu anchor="bottom end" isAdmin={isAdmin}/>
+                            </Dropdown>
+                        }
                     </NavbarSection>
                 </Navbar>
             }
@@ -83,10 +106,7 @@ export function ApplicationLayout({isAdmin = false, children}) {
                     {isAdmin &&
                         <SidebarBody>
                             <SidebarSection>
-                                <SidebarItem href="/home" current={pathname === '/'}>
-                                    <HomeIcon/>
-                                    <SidebarLabel>Home</SidebarLabel>
-                                </SidebarItem>
+
                                 <SidebarItem href="/home/exam" current={pathname.startsWith('/events')}>
                                     <Square2StackIcon/>
                                     <SidebarLabel>Exam</SidebarLabel>
@@ -96,24 +116,46 @@ export function ApplicationLayout({isAdmin = false, children}) {
                     }
                     <SidebarSpacer/>
 
-
-                    <SidebarFooter className="max-lg:hidden">
-                        <Dropdown>
-                            <DropdownButton as={SidebarItem}>
+                    {ld &&
+                        <SidebarFooter className="max-lg:hidden">
+                            <Dropdown>
+                                <DropdownButton as={SidebarItem}>
                 <span className="flex min-w-0 items-center gap-3">
-                  <Avatar src="/users/erica.jpg" className="size-10" square alt=""/>
                   <span className="min-w-0">
-                    <span className="block truncate text-sm/5 font-medium text-zinc-950 dark:text-white">Erica</span>
+                    <span
+                        className="block truncate text-sm/5 font-medium text-zinc-950 dark:text-white">{ld.name}</span>
                     <span className="block truncate text-xs/5 font-normal text-zinc-500 dark:text-zinc-400">
-                      erica@example.com
+                      {ld.email}
                     </span>
                   </span>
                 </span>
-                                <ChevronUpIcon/>
-                            </DropdownButton>
-                            <AccountDropdownMenu anchor="top start"/>
-                        </Dropdown>
-                    </SidebarFooter>
+                                    <ChevronUpIcon/>
+                                </DropdownButton>
+                                <AccountDropdownMenu anchor="top start" isAdmin={isAdmin}/>
+                            </Dropdown>
+                        </SidebarFooter>
+                    }
+
+                    {isAdmin &&
+                        <SidebarFooter className="max-lg:hidden">
+                            <Dropdown>
+                                <DropdownButton as={SidebarItem}>
+                <span className="flex min-w-0 items-center gap-3">
+                  <span className="min-w-0">
+                    <span
+                        className="block truncate text-sm/5 font-medium text-zinc-950 dark:text-white">Admin</span>
+                    <span className="block truncate text-xs/5 font-normal text-zinc-500 dark:text-zinc-400">
+                      {UserSummary?.data?.email ?? ''}
+                    </span>
+                  </span>
+                </span>
+                                    <ChevronUpIcon/>
+                                </DropdownButton>
+                                <AccountDropdownMenu anchor="top start" isAdmin={isAdmin}/>
+                            </Dropdown>
+                        </SidebarFooter>
+                    }
+
                 </Sidebar>
             }
         >

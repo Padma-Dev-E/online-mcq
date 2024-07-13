@@ -22,7 +22,6 @@ const apiService = () => {
             "Content-Type": "application/json",
         },
     };
-    console.log(defaultOptions)
     let instance = axios.create(defaultOptions);
     instance.interceptors.request.use(function (config) {
         if (getClientCookie(tokenKey) !== null && getClientCookie(examTokenKey) === null) {

@@ -1,12 +1,17 @@
-import {NextResponse} from 'next/server';
-import {examTokenKey, tokenKey} from '@/app/utils/constants';
+import { NextResponse } from 'next/server';
+import { examTokenKey, tokenKey } from '@/app/utils/constants';
 
 export function middleware(request) {
     const token = getCookieFromRequest(request, tokenKey);
     const examToken = getCookieFromRequest(request, examTokenKey);
-    const {pathname} = request.nextUrl;
+    const { pathname } = request.nextUrl;
 
     const examJoinMatch = pathname.match(/^\/exam\/([^/]+)\/join$/);
+
+    // Redirect root URL to /home
+    if (pathname === '/') {
+        return NextResponse.redirect(new URL('/home', request.url));
+    }
 
     if (token && pathname === '/auth/login') {
         return NextResponse.redirect(new URL('/home', request.url));
@@ -41,5 +46,6 @@ export const config = {
         '/home/:path*',
         '/auth/login',
         '/exam/:path*',
+        '/',
     ],
 };

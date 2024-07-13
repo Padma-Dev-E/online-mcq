@@ -14,7 +14,6 @@ import {Input} from "@/components/input";
 import {Button} from "@/components/button";
 import {ClientTimeStampToServerTimeStamp} from "@/app/utils/helper";
 import {ChevronLeftIcon} from "@heroicons/react/16/solid";
-import {Badge} from "@/components/badge";
 import {Checkbox, CheckboxField} from "@/components/checkbox";
 import {Label} from "@/components/fieldset";
 import {Textarea} from "@/components/textarea";
@@ -22,6 +21,8 @@ import {Select} from "@/components/select";
 import {useRouter} from "next/navigation";
 import {useDispatch, useSelector} from "react-redux";
 import {createQuestionApi, ExamState, QuestionCreateReset} from "@/app/redux/examReducer/examReducer";
+import LoadingIcon from "@/components/loading";
+import ErrorBox from "@/components/ErrorBox";
 
 
 export default function Page({params}) {
@@ -65,6 +66,9 @@ export default function Page({params}) {
 
     return (
         <>
+            {QuestionCreate.error &&
+                <ErrorBox message={QuestionCreate.error}/>
+            }
             <div className="max-lg:hidden">
                 <div
                     className="inline-flex items-center gap-2 text-sm/6 text-zinc-500 dark:text-zinc-400 cursor-pointer"
@@ -75,18 +79,7 @@ export default function Page({params}) {
             </div>
             <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-6">
-                    <div className="w-32 shrink-0">
-                        <img className="aspect-[3/2] rounded-lg shadow" src={"event.imgUrl"} alt=""/>
-                    </div>
-                    <div>
-                        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                            <Heading>{"Title"}</Heading>
-                            <Badge color={1 === 'On Sale' ? 'lime' : 'zinc'}>{"active"}</Badge>
-                        </div>
-                        <div className="mt-2 text-sm/6 text-zinc-500">
-                            {"event.date"} at {"event.time"} <span aria-hidden="true">·</span> {"event.location"}
-                        </div>
-                    </div>
+                    <Heading>Add question</Heading>
                 </div>
                 <div className="flex gap-4">
                     <Button onClick={() => router.push("/home/exam/asdad/questions/create")}>Add question</Button>
@@ -98,7 +91,6 @@ export default function Page({params}) {
             </div>
 
             <form method="post" className="mx-auto mt-4" onSubmit={handleSubmit}>
-                <Heading>Add question</Heading>
                 <Divider className="my-10 mt-6"/>
 
                 <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
@@ -160,10 +152,13 @@ export default function Page({params}) {
                 <Divider className="my-10" soft/>
 
                 <div className="flex justify-end gap-4">
-                    <Button type="reset" plain>
-                        Reset
+                    <Button type="submit" disabled={QuestionCreate.isLoading}>Create
+                        {QuestionCreate.isLoading &&
+                            <div className={"animate-spin"}>
+                                <LoadingIcon/>
+                            </div>
+                        }
                     </Button>
-                    <Button type="submit">Create</Button>
                 </div>
             </form>
         </>

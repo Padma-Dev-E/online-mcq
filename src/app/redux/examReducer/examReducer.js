@@ -188,6 +188,7 @@ export const AnswerQuestionApi = (data) => async (dispatch) => {
         .post(endPoints.question.answer, data)
         .then((response) => {
             dispatch(MyQuestionSuccess(response.data))
+            dispatch(AnswerQuestionSuccess(response.data))
         })
         .catch((error) =>
             dispatch(AnswerQuestionError(formatAxiosErrorMessage(error)))
@@ -264,6 +265,13 @@ export const ExamCandidateDetailsApi = (id, part_id) => async (dispatch) => {
         .catch((error) =>
             dispatch(ExamCandidateDetailsError(formatAxiosErrorMessage(error)))
         );
+};
+
+export const downloadCSV = async (url) => {
+    const response = await apiService.get(url, {
+        responseType: 'blob',
+    });
+    return response.data;
 };
 
 export const {

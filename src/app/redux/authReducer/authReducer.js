@@ -24,6 +24,11 @@ const initialAuthState = {
         data: null,
         error: null,
     },
+    UserSummary: {
+        isLoading: false,
+        data: null,
+        error: null,
+    },
 };
 
 export const authSlice = createSlice({
@@ -34,6 +39,7 @@ export const authSlice = createSlice({
     reducers: {
         ...createAPIAsyncReducers('Login', initialAuthState.Login),
         ...createAPIAsyncReducers('Logout', initialAuthState.Logout),
+        ...createAPIAsyncReducers('UserSummary', initialAuthState.UserSummary),
     },
 });
 
@@ -57,6 +63,17 @@ export const logoutApi = (data) => async (dispatch) => {
         );
 };
 
+
+export const UserSummaryApi = (data) => async (dispatch) => {
+    dispatch(UserSummaryRequesting());
+    apiService
+        .get("/user/user_summary/", data)
+        .then((response) => dispatch(UserSummarySuccess(response.data)))
+        .catch((error) =>
+            dispatch(UserSummaryError(formatAxiosErrorMessage(error)))
+        );
+};
+
 export const {
     LoginRequesting,
     LoginSuccess,
@@ -67,6 +84,11 @@ export const {
     LogoutSuccess,
     LogoutError,
     LogoutReset,
+
+    UserSummaryRequesting,
+    UserSummarySuccess,
+    UserSummaryError,
+    UserSummaryReset,
 
 } = authSlice.actions;
 export const AuthState = (state) => state.auth;

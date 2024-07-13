@@ -1,16 +1,19 @@
 'use client'
-import {Stat} from '@/app/home/page'
 import {Badge} from '@/components/badge'
 import {Button} from '@/components/button'
 import {Heading, Subheading} from '@/components/heading'
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/table'
 import {ChevronLeftIcon} from '@heroicons/react/16/solid'
-import React, {useEffect} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/navigation";
 import {useDispatch, useSelector} from "react-redux";
-import {ExamDetailsApi, ExamState, ExamStatusUpdateApi} from "@/app/redux/examReducer/examReducer";
+import {downloadCSV, ExamDetailsApi, ExamState, ExamStatusUpdateApi} from "@/app/redux/examReducer/examReducer";
 import {formatMinutes, ServerTimeStampToClientTimeStamp, timeLeft} from "@/app/utils/helper";
 import TimeIndicator from "@/components/timer";
+import {Stat} from "@/components/Stat";
+import LoadingIcon from "@/components/loading";
+import QRCode from "react-qr-code";
+import {toPng} from "html-to-image";
 
 export default function page({params}) {
 
@@ -24,6 +27,50 @@ export default function page({params}) {
         dispatch(ExamDetailsApi(id))
     }, []);
 
+    const getFileName = () => {
+        const topic = ExamDetails?.data?.exam_name ?? "MCQ ONLINE"
+        return topic.replaceAll(" ", "_").toLowerCase() + ".png"
+    }
+
+    const getUrl = () => {
+        return `https://${window.location.host}/exam/${id}/join/`
+    }
+
+    const qrCodeDiv = useRef(null);
+    const saveQrCode = () => {
+        if (qrCodeDiv.current !== null) {
+            toPng(qrCodeDiv.current, {cacheBust: false, pixelRatio: 1})
+                .then((dataUrl) => {
+                    const link = document.createElement('a')
+                    link.download = getFileName()
+                    link.href = dataUrl
+                    link.click()
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } else {
+            console.log("Empty div")
+        }
+    }
+
+    const [downloadCSVLoading, setDownloadCSVLoading] = useState(false);
+    const downloadExamParticipantsCSV = async () => {
+        try {
+            setDownloadCSVLoading(true)
+            const csvBlob = await downloadCSV(`/exam/${id}/participants/csv`);
+            const url = window.URL.createObjectURL(new Blob([csvBlob], {type: 'text/csv'}));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `participants_${id}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+            setDownloadCSVLoading(false)
+        } catch (error) {
+            console.error('Failed to download CSV:', error);
+        }
+    };
 
     return (
         <>
@@ -59,9 +106,20 @@ export default function page({params}) {
                 {ExamDetails?.data?.status === "active" &&
                     <div className="flex gap-4">
                         <Button outline onClick={() => router.push(`/home/exam/${id}/edit/`)}>Edit</Button>
-                        <Button onClick={() => {
+                        <Button onClick={saveQrCode}>
+                            Save QR
+                        </Button>
+                        <Button disabled={ExamDetails.isLoading} onClick={() => {
                             dispatch(ExamStatusUpdateApi(id, {status: "ongoing"}))
-                        }}>Start Exam</Button>
+                        }}>Start Exam
+
+                            {ExamDetails.isLoading &&
+                                <div className={"animate-spin"}>
+                                    <LoadingIcon/>
+                                </div>
+                            }
+
+                        </Button>
                     </div>
                 }
 
@@ -70,11 +128,53 @@ export default function page({params}) {
                 }
                 {ExamDetails?.data?.status === "ongoing" &&
                     <div className="flex gap-4">
-                        <Button onClick={() => {
+                        <Button onClick={saveQrCode}>
+                            Save QR
+                        </Button>
+                        <Button disabled={ExamDetails.isLoading} onClick={() => {
                             dispatch(ExamStatusUpdateApi(id, {status: "completed"}))
-                        }}>End Exam</Button>
+                        }}>End Exam
+
+                            {ExamDetails.isLoading &&
+                                <div className={"animate-spin"}>
+                                    <LoadingIcon/>
+                                </div>
+                            }
+
+                        </Button>
                     </div>
                 }
+
+                {ExamDetails?.data?.status === "completed" &&
+                    <div className="flex gap-4">
+                        <Button onClick={downloadExamParticipantsCSV}>
+                            Download report
+
+                            {downloadCSVLoading &&
+                                <div className={"animate-spin"}>
+                                    <LoadingIcon/>
+                                </div>
+                            }
+                        </Button>
+                    </div>
+                }
+
+                <div className={"absolute"} style={{left: -1000}}>
+                    {/*<div>*/}
+                    <div style={{width: 224}} className={"bg-white pl-3  pr-3 pb-3 pt-1 flex-col"} ref={qrCodeDiv}>
+                        <p className={"text-black text-lg font-semi-bold text-wrap"}>Online MCQ</p>
+                        <QRCode
+                            size={256}
+                            style={{height: 200, width: 200, paddingTop: 1}}
+                            value={getUrl()}
+                            viewBox={`0 0 256 256`}
+                        />
+                        <p className={"text-black text-wrap pt-2"}>{ExamDetails?.data?.exam_name}</p>
+                        <p className={"text-gray-700 text-wrap text-sm"}>Duration
+                            : {formatMinutes(ExamDetails?.data?.duration)}</p>
+                    </div>
+                </div>
+
 
             </div>
             <div className="mt-8 grid gap-8 sm:grid-cols-3">

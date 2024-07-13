@@ -15,6 +15,7 @@ import {
     ExamUpdateReset
 } from "@/app/redux/examReducer/examReducer";
 import {useRouter} from "next/navigation";
+import ErrorBox from "@/components/ErrorBox";
 
 export default function Page({params}) {
     const dispatch = useDispatch();
@@ -78,70 +79,75 @@ export default function Page({params}) {
     };
 
     return (
-        <form method="post" className="mx-auto max-w-4xl" onSubmit={handleSubmit}>
-            <Heading>Edit exam</Heading>
-            <Divider className="my-10 mt-6"/>
+        <>
+            {ExamUpdate.error &&
+                <ErrorBox message={ExamUpdate.error}/>
+            }
+            <form method="post" className="mx-auto max-w-4xl" onSubmit={handleSubmit}>
+                <Heading>Edit exam</Heading>
+                <Divider className="my-10 mt-6"/>
 
-            <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
-                <div className="space-y-1">
-                    <Subheading>Exam title</Subheading>
+                <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+                    <div className="space-y-1">
+                        <Subheading>Exam title</Subheading>
+                    </div>
+                    <div>
+                        <Input
+                            aria-label="Exam Title"
+                            name="exam_name"
+                            value={formData.exam_name}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+                </section>
+
+                <Divider className="my-10" soft/>
+
+                <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+                    <div className="space-y-1">
+                        <Subheading>Exam start time</Subheading>
+                        <Text>This will only be used for displaying the start time. You have to manually start the
+                            exam.</Text>
+                    </div>
+                    <div>
+                        <Input
+                            aria-label="Exam Start Time"
+                            name="start_time"
+                            type="datetime-local"
+                            value={formData.start_time}
+                            onChange={handleInputChange}
+                            min={getCurrentDateTime()}
+                            required
+                        />
+                    </div>
+                </section>
+
+                <Divider className="my-10" soft/>
+
+                <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+                    <div className="space-y-1">
+                        <Subheading>Exam duration</Subheading>
+                        <Text>This is the duration of the exam in minutes.</Text>
+                    </div>
+                    <div className="space-y-4">
+                        <Input
+                            type="number"
+                            aria-label="Exam Duration"
+                            name="duration"
+                            value={formData.duration}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+                </section>
+
+                <Divider className="my-10" soft/>
+
+                <div className="flex justify-end gap-4">
+                    <Button type="submit">Save</Button>
                 </div>
-                <div>
-                    <Input
-                        aria-label="Exam Title"
-                        name="exam_name"
-                        value={formData.exam_name}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
-            </section>
-
-            <Divider className="my-10" soft/>
-
-            <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
-                <div className="space-y-1">
-                    <Subheading>Exam start time</Subheading>
-                    <Text>This will only be used for displaying the start time. You have to manually start the
-                        exam.</Text>
-                </div>
-                <div>
-                    <Input
-                        aria-label="Exam Start Time"
-                        name="start_time"
-                        type="datetime-local"
-                        value={formData.start_time}
-                        onChange={handleInputChange}
-                        min={getCurrentDateTime()}
-                        required
-                    />
-                </div>
-            </section>
-
-            <Divider className="my-10" soft/>
-
-            <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
-                <div className="space-y-1">
-                    <Subheading>Exam duration</Subheading>
-                    <Text>This is the duration of the exam in minutes.</Text>
-                </div>
-                <div className="space-y-4">
-                    <Input
-                        type="number"
-                        aria-label="Exam Duration"
-                        name="duration"
-                        value={formData.duration}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </div>
-            </section>
-
-            <Divider className="my-10" soft/>
-
-            <div className="flex justify-end gap-4">
-                <Button type="submit">Save</Button>
-            </div>
-        </form>
+            </form>
+        </>
     );
 }
