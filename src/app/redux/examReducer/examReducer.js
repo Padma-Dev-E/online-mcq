@@ -61,6 +61,31 @@ const initialExamState = {
         data: null,
         error: null,
     },
+    ExamStatusUpdate: {
+        isLoading: false,
+        data: null,
+        error: null,
+    },
+    ExamUpdate: {
+        isLoading: false,
+        data: null,
+        error: null,
+    },
+    ExamCandidate: {
+        isLoading: false,
+        data: null,
+        error: null,
+    },
+    ExamCandidateDetails: {
+        isLoading: false,
+        data: null,
+        error: null,
+    },
+    ExamPublicDetails: {
+        isLoading: false,
+        data: null,
+        error: null,
+    },
 };
 
 export const examSlice = createSlice({
@@ -77,6 +102,11 @@ export const examSlice = createSlice({
         ...createAPIAsyncReducers('MyQuestion', initialExamState.MyQuestion),
         ...createAPIAsyncReducers('AnswerQuestion', initialExamState.AnswerQuestion),
         ...createAPIAsyncReducers('ExamDetails', initialExamState.ExamDetails),
+        ...createAPIAsyncReducers('ExamStatusUpdate', initialExamState.ExamStatusUpdate),
+        ...createAPIAsyncReducers('ExamUpdate', initialExamState.ExamUpdate),
+        ...createAPIAsyncReducers('ExamCandidate', initialExamState.ExamCandidate),
+        ...createAPIAsyncReducers('ExamCandidateDetails', initialExamState.ExamCandidateDetails),
+        ...createAPIAsyncReducers('ExamPublicDetails', initialExamState.ExamPublicDetails),
     },
 });
 
@@ -157,25 +187,84 @@ export const AnswerQuestionApi = (data) => async (dispatch) => {
     apiService
         .post(endPoints.question.answer, data)
         .then((response) => {
-            dispatch(AnswerQuestionSuccess(response.data))
+            dispatch(MyQuestionSuccess(response.data))
         })
         .catch((error) =>
             dispatch(AnswerQuestionError(formatAxiosErrorMessage(error)))
         );
 };
 
-export const ExamDetailsApi = (data) => async (dispatch) => {
-    dispatch(AnswerQuestionRequesting());
+export const ExamDetailsApi = (id) => async (dispatch) => {
+    dispatch(ExamDetailsRequesting());
     apiService
-        .post(endPoints.question.answer, data)
+        .get(`exam/${id}/details/`, {})
         .then((response) => {
-            dispatch(AnswerQuestionSuccess(response.data))
+            dispatch(ExamDetailsSuccess(response.data))
         })
         .catch((error) =>
-            dispatch(AnswerQuestionError(formatAxiosErrorMessage(error)))
+            dispatch(ExamDetailsError(formatAxiosErrorMessage(error)))
         );
 };
 
+export const ExamPublicDetailsApi = (id) => async (dispatch) => {
+    dispatch(ExamPublicDetailsRequesting());
+    apiService
+        .get(`exam/${id}/public/`, {})
+        .then((response) => {
+            dispatch(ExamPublicDetailsSuccess(response.data))
+        })
+        .catch((error) =>
+            dispatch(ExamPublicDetailsError(formatAxiosErrorMessage(error)))
+        );
+};
+
+export const ExamStatusUpdateApi = (id, data) => async (dispatch) => {
+    dispatch(ExamDetailsRequesting());
+    apiService
+        .patch(`exam/${id}/status/`, data)
+        .then((response) => {
+            dispatch(ExamDetailsSuccess(response.data))
+        })
+        .catch((error) =>
+            dispatch(ExamDetailsError(formatAxiosErrorMessage(error)))
+        );
+};
+
+export const ExamUpdateApi = (id, data) => async (dispatch) => {
+    dispatch(ExamUpdateRequesting());
+    apiService
+        .put(`exam/${id}/update/`, data)
+        .then((response) => {
+            dispatch(ExamUpdateSuccess(response.data))
+        })
+        .catch((error) =>
+            dispatch(ExamUpdateError(formatAxiosErrorMessage(error)))
+        );
+};
+
+export const ExamCandidateApi = (id) => async (dispatch) => {
+    dispatch(ExamCandidateRequesting());
+    apiService
+        .get(`exam/${id}/participants/`, {})
+        .then((response) => {
+            dispatch(ExamCandidateSuccess(response.data))
+        })
+        .catch((error) =>
+            dispatch(ExamCandidateError(formatAxiosErrorMessage(error)))
+        );
+};
+
+export const ExamCandidateDetailsApi = (id, part_id) => async (dispatch) => {
+    dispatch(ExamCandidateDetailsRequesting());
+    apiService
+        .get(`exam/${id}/participants/${part_id}/details/`, {})
+        .then((response) => {
+            dispatch(ExamCandidateDetailsSuccess(response.data))
+        })
+        .catch((error) =>
+            dispatch(ExamCandidateDetailsError(formatAxiosErrorMessage(error)))
+        );
+};
 
 export const {
     ExamListRequesting,
@@ -217,6 +306,31 @@ export const {
     ExamDetailsSuccess,
     ExamDetailsError,
     ExamDetailsReset,
+
+    ExamStatusUpdateRequesting,
+    ExamStatusUpdateSuccess,
+    ExamStatusUpdateError,
+    ExamStatusUpdateReset,
+
+    ExamUpdateRequesting,
+    ExamUpdateSuccess,
+    ExamUpdateError,
+    ExamUpdateReset,
+
+    ExamCandidateRequesting,
+    ExamCandidateSuccess,
+    ExamCandidateError,
+    ExamCandidateReset,
+
+    ExamCandidateDetailsRequesting,
+    ExamCandidateDetailsSuccess,
+    ExamCandidateDetailsError,
+    ExamCandidateDetailsReset,
+
+    ExamPublicDetailsRequesting,
+    ExamPublicDetailsSuccess,
+    ExamPublicDetailsError,
+    ExamPublicDetailsReset,
 
 } = examSlice.actions;
 export const ExamState = (state) => state.exam;

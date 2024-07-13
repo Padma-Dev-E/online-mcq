@@ -47,11 +47,7 @@ export function formatMinutes(minutes) {
 }
 
 export const timeLeft = (st, duration) => {
-    const timestamp = ServerTimeStampToClientTimeStamp(st);
-    const timestampMs = timestamp * 1000;
-    const currentDate = new Date(timestampMs);
-    currentDate.setMinutes(currentDate.getMinutes() + duration);
-    const currentTimeMs = Date.now();
-    const timeDiffMs = currentDate.getTime() - currentTimeMs;
-    return Math.ceil(timeDiffMs / (1000 * 60))
+    let end_time = st + (duration * 60)
+    let local = ClientTimeStampToServerTimeStamp(new Date().getTime())
+    return (end_time - local) / 60
 }

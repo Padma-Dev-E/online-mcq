@@ -27,6 +27,7 @@ export default function Page({params}) {
     useEffect(() => {
         if (JoinExam.data) {
             setToken(examTokenKey, JoinExam.data.access_token)
+            router.push(`/exam/${id}/`)
         }
     }, [JoinExam.data]);
 

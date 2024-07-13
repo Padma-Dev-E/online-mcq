@@ -66,8 +66,8 @@ export default function page() {
                                             <span>
                                                 Duration : {formatMinutes(event.duration)}
                                             </span>
-                                            {event.status === "ongoing" &&
-                                                <span>Start Time
+                                            {event.status !== "active" &&
+                                                <span>Time
                                                 : {new Date(ServerTimeStampToClientTimeStamp(event.start_time)).toLocaleString()}</span>
                                             }
                                         </div>

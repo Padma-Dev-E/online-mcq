@@ -15,7 +15,7 @@ export const QuestionListItem = memo(forwardRef(({item, idx}, ref) => {
 
     return (
         <div>
-            <Heading>{idx + 1}. {item.question}</Heading>
+            <Heading>{item.question_number}. {item.question}</Heading>
             <RadioGroup className={"grid md:grid-cols-2 mt-4"} value={selected} onChange={setSelected}>
                 <RadioField>
                     <Radio value={"optionA"}/>
