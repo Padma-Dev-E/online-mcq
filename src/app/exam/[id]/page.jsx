@@ -21,9 +21,11 @@ import ErrorBox from "@/components/ErrorBox";
 export default function page({params}) {
     const {id} = params
     const dispatch = useDispatch()
-    const {MyQuestion, ExamPublicDetails,AnswerQuestion} = useSelector(ExamState)
+    const {MyQuestion, ExamPublicDetails, AnswerQuestion} = useSelector(ExamState)
     useEffect(() => {
-        document.title = "Online MCQ";
+        if (typeof window !== 'undefined') {
+            document.title = "Online MCQ";
+        }
         dispatch(ExamPublicDetailsApi(id))
         dispatch(MyQuestionApi(id))
 
@@ -36,7 +38,9 @@ export default function page({params}) {
 
     useEffect(() => {
         if (ExamPublicDetails.data) {
-            document.title = ExamPublicDetails?.data?.exam_name;
+            if (typeof window !== 'undefined') {
+                document.title = ExamPublicDetails?.data?.exam_name;
+            }
         }
     }, [ExamPublicDetails]);
 

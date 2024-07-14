@@ -30,7 +30,9 @@ export default function Page({params}) {
     });
 
     useEffect(() => {
-        document.title = "Edit Exam";
+        if (typeof window !== 'undefined') {
+            document.title = "Edit Exam";
+        }
         dispatch(ExamDetailsApi(id));
     }, [dispatch, id]);
 

@@ -23,7 +23,9 @@ export default function page({params}) {
     const {ExamDetails} = useSelector(ExamState)
 
     useEffect(() => {
-        document.title = "New Page Title";
+        if (typeof window !== 'undefined') {
+            document.title = "New Page Title";
+        }
         dispatch(ExamDetailsApi(id))
     }, []);
 
@@ -41,10 +43,12 @@ export default function page({params}) {
         if (qrCodeDiv.current !== null) {
             toPng(qrCodeDiv.current, {cacheBust: false, pixelRatio: 1})
                 .then((dataUrl) => {
-                    const link = document.createElement('a')
-                    link.download = getFileName()
-                    link.href = dataUrl
-                    link.click()
+                    if (typeof window !== 'undefined') {
+                        const link = document.createElement('a')
+                        link.download = getFileName()
+                        link.href = dataUrl
+                        link.click()
+                    }
                 })
                 .catch((err) => {
                     console.log(err)
@@ -57,16 +61,18 @@ export default function page({params}) {
     const [downloadCSVLoading, setDownloadCSVLoading] = useState(false);
     const downloadExamParticipantsCSV = async () => {
         try {
-            setDownloadCSVLoading(true)
-            const csvBlob = await downloadCSV(`/exam/${id}/participants/csv`);
-            const url = window.URL.createObjectURL(new Blob([csvBlob], {type: 'text/csv'}));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `participants_${id}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            link.parentNode.removeChild(link);
-            setDownloadCSVLoading(false)
+            if (typeof window !== 'undefined') {
+                setDownloadCSVLoading(true)
+                const csvBlob = await downloadCSV(`/exam/${id}/participants/csv`);
+                const url = window.URL.createObjectURL(new Blob([csvBlob], {type: 'text/csv'}));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `participants_${id}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                link.parentNode.removeChild(link);
+                setDownloadCSVLoading(false)
+            }
         } catch (error) {
             console.error('Failed to download CSV:', error);
         }

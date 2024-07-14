@@ -18,7 +18,8 @@ export default function page({params}) {
     const {ExamDetails, ExamCandidate} = useSelector(ExamState)
 
     useEffect(() => {
-        document.title = "New Page Title";
+        if (typeof window !== 'undefined') {
+        document.title = "New Page Title";}
         dispatch(ExamDetailsApi(id))
         dispatch(ExamCandidateApi(id))
     }, []);

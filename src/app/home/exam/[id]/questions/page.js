@@ -20,7 +20,9 @@ export default function page({params}) {
     const {QuestionList, ExamDetails} = useSelector(ExamState)
 
     useEffect(() => {
-        document.title = "Questions";
+        if (typeof window !== 'undefined') {
+            document.title = "Questions";
+        }
         dispatch(listQuestionApi(id))
         dispatch(ExamDetailsApi(id))
     }, []);

@@ -153,13 +153,15 @@ export const DownloadFile = (url, fileName) => {
             return res.blob()
         })
         .then((res) => {
-            const aElement = document.createElement("a");
-            aElement.setAttribute("download", fileName);
-            const href = URL.createObjectURL(res);
-            aElement.href = href;
-            aElement.setAttribute("target", "_blank");
-            aElement.click();
-            URL.revokeObjectURL(href);
+            if (typeof window !== 'undefined') {
+                const aElement = document.createElement("a");
+                aElement.setAttribute("download", fileName);
+                const href = URL.createObjectURL(res);
+                aElement.href = href;
+                aElement.setAttribute("target", "_blank");
+                aElement.click();
+                URL.revokeObjectURL(href);
+            }
         });
 
     // const aElement = document.createElement("a");
@@ -196,10 +198,7 @@ export const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
 };
 
-export const scrollToBottom = (id) => {
-    const element = document.getElementsByClassName(id);
-    element.scrollTop = element.scrollHeight;
-};
+
 export const getReplySubject = (subject = "") => {
     if (subject.includes("Re: ")) {
         return subject;

@@ -10,7 +10,7 @@ export function middleware(request) {
 
     // Redirect root URL to /home
     if (pathname === '/') {
-        return NextResponse.redirect(new URL('/home', request.url));
+        return NextResponse.redirect(new URL('/home/exam/', request.url));
     }
 
     if (token && pathname === '/auth/login') {

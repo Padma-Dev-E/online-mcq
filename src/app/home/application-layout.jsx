@@ -64,7 +64,7 @@ function AccountDropdownMenu({anchor, isAdmin}) {
 export function ApplicationLayout({isAdmin = false, children}) {
     let pathname = usePathname()
     const {UserSummary} = useSelector(AuthState)
-    const ld = JSON.parse(getClientCookie("ld"))
+    const ld = JSON.parse(getClientCookie("ld") ?? "{}")
     const dispatch = useDispatch()
     useEffect(() => {
         if (isAdmin) {

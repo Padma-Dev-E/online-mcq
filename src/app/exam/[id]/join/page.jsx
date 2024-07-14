@@ -20,7 +20,9 @@ export default function Page({params}) {
     const [ld, setLd] = useState(null);
 
     useEffect(() => {
-        document.title = "Online MCQ";
+        if (typeof window !== 'undefined') {
+            document.title = "Online MCQ";
+        }
     }, []);
 
     const setToken = (key, token) => {
