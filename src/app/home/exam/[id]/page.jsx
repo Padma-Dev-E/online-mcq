@@ -79,7 +79,7 @@ export default function page({params}) {
         try {
             if (typeof window !== 'undefined') {
                 setDownloadCSVLoading(true)
-                const csvBlob = await downloadCSV(`/exam/${id}/participants/csv`);
+                const csvBlob = await downloadCSV(`/exam/${id}/participants/csv/`);
                 const url = window.URL.createObjectURL(new Blob([csvBlob], {type: 'text/csv'}));
                 const link = document.createElement('a');
                 link.href = url;
