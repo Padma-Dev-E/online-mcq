@@ -26,6 +26,12 @@ export default function Page() {
     const {ExamCreate} = useSelector(ExamState)
 
     useEffect(() => {
+        if (typeof window !== 'undefined') {
+            document.title = "Online MCQ | Create Exam";
+        }
+    }, []);
+
+    useEffect(() => {
         if (ExamCreate.data) {
             router.push(`/home/exam/${ExamCreate.data.id}/`)
             dispatch(ExamCreateReset())

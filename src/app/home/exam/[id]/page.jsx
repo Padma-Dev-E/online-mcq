@@ -24,10 +24,18 @@ export default function page({params}) {
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            document.title = "New Page Title";
+            document.title = "Online MCQ | Exam";
         }
         dispatch(ExamDetailsApi(id))
     }, []);
+
+    useEffect(() => {
+        if (ExamDetails.data) {
+            if (typeof window !== 'undefined') {
+                document.title = `Online MCQ | ${ExamDetails?.data?.exam_name}`;
+            }
+        }
+    }, [ExamDetails]);
 
     const getFileName = () => {
         const topic = ExamDetails?.data?.exam_name ?? "MCQ ONLINE"
@@ -39,8 +47,17 @@ export default function page({params}) {
     }
 
     const qrCodeDiv = useRef(null);
+    const [qrLoading, setQrLoading] = useState(false)
+    const handleCopy = () => {
+        navigator.clipboard.writeText(getUrl()).then(() => {
+            alert('Url copied');
+        }).catch((err) => {
+            alert('Failed to copy url');
+        });
+    };
     const saveQrCode = () => {
         if (qrCodeDiv.current !== null) {
+            setQrLoading(true)
             toPng(qrCodeDiv.current, {cacheBust: false, pixelRatio: 1})
                 .then((dataUrl) => {
                     if (typeof window !== 'undefined') {
@@ -49,12 +66,11 @@ export default function page({params}) {
                         link.href = dataUrl
                         link.click()
                     }
+                    setQrLoading(false)
                 })
                 .catch((err) => {
-                    console.log(err)
+                    setQrLoading(false)
                 })
-        } else {
-            console.log("Empty div")
         }
     }
 
@@ -112,8 +128,17 @@ export default function page({params}) {
                 {ExamDetails?.data?.status === "active" &&
                     <div className="flex gap-4">
                         <Button outline onClick={() => router.push(`/home/exam/${id}/edit/`)}>Edit</Button>
-                        <Button onClick={saveQrCode}>
+                        <Button onClick={saveQrCode} disabled={qrLoading}>
                             Save QR
+
+                            {qrLoading &&
+                                <div className={"animate-spin"}>
+                                    <LoadingIcon/>
+                                </div>
+                            }
+                        </Button>
+                        <Button onClick={handleCopy}>
+                            Copy URL
                         </Button>
                         <Button disabled={ExamDetails.isLoading} onClick={() => {
                             dispatch(ExamStatusUpdateApi(id, {status: "ongoing"}))
@@ -134,8 +159,17 @@ export default function page({params}) {
                 }
                 {ExamDetails?.data?.status === "ongoing" &&
                     <div className="flex gap-4">
-                        <Button onClick={saveQrCode}>
+                        <Button onClick={saveQrCode} disabled={qrLoading}>
                             Save QR
+
+                            {qrLoading &&
+                                <div className={"animate-spin"}>
+                                    <LoadingIcon/>
+                                </div>
+                            }
+                        </Button>
+                        <Button onClick={handleCopy}>
+                            Copy URL
                         </Button>
                         <Button disabled={ExamDetails.isLoading} onClick={() => {
                             dispatch(ExamStatusUpdateApi(id, {status: "completed"}))

@@ -16,6 +16,7 @@ import {
 } from "@/app/redux/examReducer/examReducer";
 import {useRouter} from "next/navigation";
 import ErrorBox from "@/components/ErrorBox";
+import LoadingIcon from "@/components/loading";
 
 export default function Page({params}) {
     const dispatch = useDispatch();
@@ -31,7 +32,7 @@ export default function Page({params}) {
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            document.title = "Edit Exam";
+            document.title = `Online MCQ | Edit Exam`;
         }
         dispatch(ExamDetailsApi(id));
     }, [dispatch, id]);
@@ -147,7 +148,12 @@ export default function Page({params}) {
                 <Divider className="my-10" soft/>
 
                 <div className="flex justify-end gap-4">
-                    <Button type="submit">Save</Button>
+                    <Button type="submit" disabled={ExamUpdate.isLoading}>Save
+                        {ExamUpdate.isLoading &&
+                            <div className={"animate-spin"}>
+                                <LoadingIcon/>
+                            </div>
+                        }</Button>
                 </div>
             </form>
         </>

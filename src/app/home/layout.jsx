@@ -1,4 +1,3 @@
-import {getEvents} from '@/data'
 import '@/styles/tailwind.css'
 
 import {ApplicationLayout} from './application-layout'
@@ -13,15 +12,19 @@ export const metadata = {
 }
 
 export default async function RootLayout({children}) {
-    let events = await getEvents()
 
     return (
         <html lang="en"
               className="text-zinc-950 antialiased lg:bg-zinc-100 dark:bg-zinc-900 dark:text-white dark:lg:bg-zinc-950"
         >
+        <head>
+            <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
+            <link rel="icon" id="favicon"
+                  href="https://ik.imagekit.io/kittydev/KittXDev/KittXdev_x_white_icon_uOCkfhTIz.svg"/>
+        </head>
         <body>
         <Providers>
-            <ApplicationLayout events={events} isAdmin={true}>
+            <ApplicationLayout isAdmin={true}>
                 {children}
             </ApplicationLayout>
         </Providers>

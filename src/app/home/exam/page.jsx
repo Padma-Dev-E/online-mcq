@@ -26,6 +26,12 @@ export default function page() {
         dispatch(listExamApi())
     }, []);
 
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            document.title = "Online MCQ | Exams";
+        }
+    }, []);
+
     return (
         <>
             {ExamList.error &&
@@ -37,7 +43,7 @@ export default function page() {
                 </div>
                 <Button onClick={() => {
                     router.push("/home/exam/create/")
-                }}>Create event</Button>
+                }}>Create exam</Button>
             </div>
             <ul className="mt-10">
                 {ExamList.data?.map((event, index) => (

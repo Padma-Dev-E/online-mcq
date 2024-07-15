@@ -21,11 +21,20 @@ export default function page({params}) {
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            document.title = "Questions";
+            document.title = `Online MCQ`;
         }
         dispatch(listQuestionApi(id))
         dispatch(ExamDetailsApi(id))
     }, []);
+
+
+    useEffect(() => {
+        if (ExamDetails.data) {
+            if (typeof window !== 'undefined') {
+                document.title = `Online MCQ | ${ExamDetails?.data?.exam_name} | Questions`;
+            }
+        }
+    }, [ExamDetails]);
 
     const [showAnswers, setShowAnswers] = useState(false);
 

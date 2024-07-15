@@ -41,6 +41,12 @@ export default function Page({params}) {
         }
     }, [QuestionCreate.data]);
 
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            document.title = `Online MCQ | Create Question`;
+        }
+    }, []);
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
@@ -80,13 +86,6 @@ export default function Page({params}) {
             <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-6">
                     <Heading>Add question</Heading>
-                </div>
-                <div className="flex gap-4">
-                    <Button onClick={() => router.push("/home/exam/asdad/questions/create")}>Add question</Button>
-                    <CheckboxField>
-                        <Checkbox name="email_is_public" defaultChecked/>
-                        <Label>Show answers</Label>
-                    </CheckboxField>
                 </div>
             </div>
 
@@ -152,7 +151,7 @@ export default function Page({params}) {
                 <Divider className="my-10" soft/>
 
                 <div className="flex justify-end gap-4">
-                    <Button type="submit" disabled={QuestionCreate.isLoading}>Create
+                    <Button type="submit" disabled={QuestionCreate.isLoading}>Add
                         {QuestionCreate.isLoading &&
                             <div className={"animate-spin"}>
                                 <LoadingIcon/>

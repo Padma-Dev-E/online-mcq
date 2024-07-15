@@ -4,7 +4,7 @@ import {Input} from "@/components/input";
 import {Button} from "@/components/button";
 import {useRouter} from "next/navigation";
 import {useDispatch, useSelector} from "react-redux";
-import {AuthState, loginApi} from "@/app/redux/authReducer/authReducer";
+import {AuthState, loginApi, LoginReset} from "@/app/redux/authReducer/authReducer";
 import {useEffect} from "react";
 import {refreshKey, tokenKey} from "@/app/utils/constants";
 import {setClientCookie} from "@/app/utils/clientCookie";
@@ -26,7 +26,10 @@ export default function Login() {
         if (Login.data) {
             setToken(tokenKey, Login.data.access_token)
             setToken(refreshKey, Login.data.refresh_token)
-            router.push("/home")
+            router.push("/home/exam")
+        }
+        return () => {
+            dispatch(LoginReset)
         }
     }, [Login.data]);
 

@@ -19,7 +19,8 @@ export default function page({params}) {
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-        document.title = "New Page Title";}
+            document.title = `Online MCQ | Candidates`;
+        }
         dispatch(ExamDetailsApi(id))
         dispatch(ExamCandidateApi(id))
     }, []);

@@ -11,6 +11,7 @@ import jwtDecode from "jsonwebtoken/decode";
 import {setClientCookie} from "@/app/utils/clientCookie";
 import {examTokenKey} from "@/app/utils/constants";
 import ErrorBox from "@/components/ErrorBox";
+import LoadingIcon from "@/components/loading";
 
 export default function Page({params}) {
     const router = useRouter();
@@ -21,7 +22,7 @@ export default function Page({params}) {
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            document.title = "Online MCQ";
+            document.title = `Online MCQ | Join`;
         }
     }, []);
 
@@ -38,7 +39,6 @@ export default function Page({params}) {
             setToken(examTokenKey, JoinExam.data.access_token)
             router.push(`/exam/${id}/`)
         }
-
         return () => {
             dispatch(JoinExamReset())
         }
@@ -95,7 +95,12 @@ export default function Page({params}) {
                 <Divider className="my-10" soft/>
 
                 <div className="flex justify-end gap-4">
-                    <Button type="submit">Join</Button>
+                    <Button type="submit" disabled={JoinExam.isLoading}>Join
+                        {JoinExam.isLoading &&
+                            <div className={"animate-spin"}>
+                                <LoadingIcon/>
+                            </div>
+                        }</Button>
                 </div>
             </form>
         </>

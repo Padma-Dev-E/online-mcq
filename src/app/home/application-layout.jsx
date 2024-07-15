@@ -21,7 +21,7 @@ import {usePathname, useRouter} from 'next/navigation'
 import {useDispatch, useSelector} from "react-redux";
 import {eraseClientCookie, getClientCookie} from "@/app/utils/clientCookie";
 import {examTokenKey, refreshKey, tokenKey} from "@/app/utils/constants";
-import {AuthState, logoutApi, UserSummaryApi} from "@/app/redux/authReducer/authReducer";
+import {AuthState, logoutApi, UserSummaryApi, UserSummaryReset} from "@/app/redux/authReducer/authReducer";
 import {useEffect} from "react";
 
 function AccountDropdownMenu({anchor, isAdmin}) {
@@ -64,11 +64,15 @@ function AccountDropdownMenu({anchor, isAdmin}) {
 export function ApplicationLayout({isAdmin = false, children}) {
     let pathname = usePathname()
     const {UserSummary} = useSelector(AuthState)
-    const ld = JSON.parse(getClientCookie("ld") ?? "{}")
+    const coo = getClientCookie("ld")
+    const ld = coo ? JSON.parse(getClientCookie("ld")) : null
     const dispatch = useDispatch()
     useEffect(() => {
         if (isAdmin) {
             dispatch(UserSummaryApi())
+        }
+        return () => {
+            dispatch(UserSummaryReset)
         }
     }, []);
 
@@ -97,7 +101,8 @@ export function ApplicationLayout({isAdmin = false, children}) {
                     <SidebarHeader>
                         <Dropdown>
                             <DropdownButton as={SidebarItem}>
-                                <Avatar src="/teams/catalyst.svg"/>
+                                <Avatar
+                                    src="https://ik.imagekit.io/kittydev/KittX/KittX_Logo_X_Paw_Black_CNLvnzE9B.png"/>
                                 <SidebarLabel>Online MCQ</SidebarLabel>
                             </DropdownButton>
                         </Dropdown>

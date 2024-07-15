@@ -17,6 +17,7 @@ import {QuestionListItem} from "@/components/app/QuestionListItemPreview/Questio
 import {formatMinutes, ServerTimeStampToClientTimeStamp, timeLeft} from "@/app/utils/helper";
 import TimeIndicator from "@/components/timer";
 import ErrorBox from "@/components/ErrorBox";
+import LoadingIcon from "@/components/loading";
 
 export default function page({params}) {
     const {id} = params
@@ -39,7 +40,7 @@ export default function page({params}) {
     useEffect(() => {
         if (ExamPublicDetails.data) {
             if (typeof window !== 'undefined') {
-                document.title = ExamPublicDetails?.data?.exam_name;
+                document.title = `Online MCQ | ${ExamPublicDetails?.data?.exam_name}`;
             }
         }
     }, [ExamPublicDetails]);
@@ -51,7 +52,12 @@ export default function page({params}) {
             answer: t1,
             question: MyQuestion?.data?.id
         }
-        dispatch(AnswerQuestionApi(payload))
+        if (!t1) {
+            alert("Invalid option")
+        } else {
+            dispatch(AnswerQuestionApi(payload))
+        }
+
     }
 
     return (
@@ -109,7 +115,15 @@ export default function page({params}) {
                             <Divider className="my-10" soft/>
                             <div className="flex justify-end">
                                 <Button type="submit"
-                                        onClick={submitAnswer}>{MyQuestion?.data?.question_number === ExamPublicDetails?.data?.total_questions - 1 ? 'Submit' : 'Next'}</Button>
+                                        disabled={MyQuestion.isLoading || ExamPublicDetails.isLoading || AnswerQuestion.isLoading}
+                                        onClick={submitAnswer}>{MyQuestion?.data?.question_number === ExamPublicDetails?.data?.total_questions - 1 ? 'Submit' : 'Next'}
+                                    {(MyQuestion.isLoading || ExamPublicDetails.isLoading || AnswerQuestion.isLoading) &&
+                                        <div className={"animate-spin"}>
+                                            <LoadingIcon/>
+                                        </div>
+                                    }
+
+                                </Button>
                             </div>
                         </>
                     }</>
