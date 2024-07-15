@@ -12,10 +12,7 @@ import {Heading, Subheading} from "@/components/heading";
 import {Divider} from "@/components/divider";
 import {Input} from "@/components/input";
 import {Button} from "@/components/button";
-import {ClientTimeStampToServerTimeStamp} from "@/app/utils/helper";
 import {ChevronLeftIcon} from "@heroicons/react/16/solid";
-import {Checkbox, CheckboxField} from "@/components/checkbox";
-import {Label} from "@/components/fieldset";
 import {Textarea} from "@/components/textarea";
 import {Select} from "@/components/select";
 import {useRouter} from "next/navigation";
@@ -51,10 +48,6 @@ export default function Page({params}) {
         event.preventDefault();
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
-        if (data.start_time) {
-            data.start_time = ClientTimeStampToServerTimeStamp(data.start_time);
-        }
-
         const payload = {
             question: data.question,
             options: {

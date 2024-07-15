@@ -9,17 +9,15 @@
 'use client'
 
 export const ServerTimeStampToClientTimeStamp = (serverTimeStamp) => {
-    const slipped = serverTimeStamp * 1000
-    const utcDate = new Date(slipped);
-    const offset = utcDate.getTimezoneOffset();
-    const offsetMillis = offset * 60 * 1000;
-    const localDate = new Date(utcDate.getTime() - offsetMillis);
-    return localDate.getTime()
+    const utcDate = new Date(serverTimeStamp * 1000);
+    const localOffset = utcDate.getTimezoneOffset();
+    const localDate = new Date(utcDate.getTime() - localOffset);
+    return localDate.getTime();
 }
 
 export const ClientTimeStampToServerTimeStamp = (clientTimeStamp) => {
     const localDate = new Date(clientTimeStamp);
-    const utcTimeStamp = localDate.getTime() + (localDate.getTimezoneOffset() * 60000);
+    const utcTimeStamp = localDate.getTime() + (localDate.getTimezoneOffset());
     return Math.floor(utcTimeStamp / 1000);
 }
 
@@ -49,5 +47,6 @@ export function formatMinutes(minutes) {
 export const timeLeft = (st, duration) => {
     let end_time = st + (duration * 60)
     let local = ClientTimeStampToServerTimeStamp(new Date().getTime())
+    console.log(local)
     return (end_time - local) / 60
 }

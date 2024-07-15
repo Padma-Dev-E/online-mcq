@@ -1,3 +1,8 @@
+networks:
+  kdx_external:
+    external: true
+
+
 services:
   next-app:
     container_name: next-app
@@ -6,3 +11,11 @@ services:
     restart: always
     ports:
       - 3000:3000
+    labels:
+      - "traefik.enable=true"
+      - 'traefik.http.routers.mcq.rule=Host(`mcq.box.kitty-dev.com`)' # will use the wildcard subdomain certificate
+      - "traefik.http.routers.mcq.entrypoints=https"
+      - "traefik.http.routers.mcq.tls=true"
+      - "traefik.http.services.mcq.loadbalancer.server.port=8000"
+    networks:
+      - kdx_external
