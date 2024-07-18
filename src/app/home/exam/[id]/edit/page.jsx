@@ -17,6 +17,7 @@ import {
 import {useRouter} from "next/navigation";
 import ErrorBox from "@/components/ErrorBox";
 import LoadingIcon from "@/components/loading";
+import {ChevronLeftIcon} from "@heroicons/react/16/solid";
 
 export default function Page({params}) {
     const dispatch = useDispatch();
@@ -83,9 +84,18 @@ export default function Page({params}) {
 
     return (
         <>
+            <div className="max-lg:hidden">
+                <div
+                    className="inline-flex items-center gap-2 text-sm/6 text-zinc-500 dark:text-zinc-400 cursor-pointer"
+                    onClick={() => router.push(`/home/exam/${id}/`)}>
+                    <ChevronLeftIcon className="size-4 fill-zinc-400 dark:fill-zinc-500"/>
+                    Back
+                </div>
+            </div>
             {ExamUpdate.error &&
                 <ErrorBox message={ExamUpdate.error}/>
             }
+
             <form method="post" className="mx-auto max-w-4xl" onSubmit={handleSubmit}>
                 <Heading>Edit exam</Heading>
                 <Divider className="my-10 mt-6"/>

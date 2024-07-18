@@ -8,6 +8,9 @@
  */
 'use client'
 
+import {examTokenKey, refreshKey, tokenKey} from "@/app/utils/constants";
+import {eraseClientCookie} from "@/app/utils/clientCookie";
+
 export const createAPIAsyncReducers = (key, init) => ({
     [`${key}Requesting`]: (state) => {
         state[key].isLoading = true;
@@ -34,6 +37,13 @@ export const formatAxiosErrorMessage = (error) => {
     let err_msg = "";
     try {
         if (error.response) {
+            if (403 === error.response.status && window.location.pathname !== "/auth/login") {
+                eraseClientCookie(tokenKey);
+                eraseClientCookie(refreshKey);
+                eraseClientCookie(examTokenKey);
+                window.location.replace("/auth/login");
+            }
+
             if ("detail" in error.response.data) {
                 err_msg = error.response.data.detail;
             } else {

@@ -30,7 +30,7 @@ export default function page({params}) {
             <div className="max-lg:hidden">
                 <div
                     className="inline-flex items-center gap-2 text-sm/6 text-zinc-500 dark:text-zinc-400 cursor-pointer"
-                    onClick={() => router.back()}>
+                    onClick={() => router.push(`/home/exam/${id}/`)}>
                     <ChevronLeftIcon className="size-4 fill-zinc-400 dark:fill-zinc-500"/>
                     Back
                 </div>

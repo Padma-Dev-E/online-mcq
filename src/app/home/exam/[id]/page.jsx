@@ -99,7 +99,7 @@ export default function page({params}) {
             <div className="max-lg:hidden">
                 <div
                     className="inline-flex items-center gap-2 text-sm/6 text-zinc-500 dark:text-zinc-400 cursor-pointer"
-                    onClick={() => router.back()}>
+                    onClick={() => router.push(`/home/exam/`)}>
                     <ChevronLeftIcon className="size-4 fill-zinc-400 dark:fill-zinc-500"/>
                     Back
                 </div>
@@ -200,7 +200,6 @@ export default function page({params}) {
                 }
 
                 <div className={"absolute"} style={{left: -1000}}>
-                    {/*<div>*/}
                     <div style={{width: 224}} className={"bg-white pl-3  pr-3 pb-3 pt-1 flex-col"} ref={qrCodeDiv}>
                         <p className={"text-black text-lg font-semi-bold text-wrap"}>Online MCQ</p>
                         <QRCode
@@ -240,12 +239,11 @@ export default function page({params}) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {ExamDetails?.data?.top_participants?.map((order, idx) => (
+                            {ExamDetails?.data?.sort((a, b) => b.marks - a.marks)?.top_participants?.map((order, idx) => (
                                 <TableRow key={order.id} href={`/home/exam/${id}/candidate/${order.id}/`}>
                                     <TableCell>{idx + 1}</TableCell>
                                     <TableCell className="text-zinc-500">{order.marks}</TableCell>
                                     <TableCell>{order.name}</TableCell>
-                                    {/*<TableCell className="text-right">US{order}</TableCell>*/}
                                 </TableRow>
                             ))}
                         </TableBody>

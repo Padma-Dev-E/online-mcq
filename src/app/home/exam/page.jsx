@@ -46,7 +46,7 @@ export default function page() {
                 }}>Create exam</Button>
             </div>
             <ul className="mt-10">
-                {ExamList.data?.map((event, index) => (
+                {ExamList?.data?.slice()?.sort((a, b) => b.start_time - a.start_time).map((event, index) => (
                     <>
                         <li key={event.id}>
                             <Divider soft={index > 0}/>
