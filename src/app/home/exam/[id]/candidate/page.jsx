@@ -72,7 +72,7 @@ export default function page({params}) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {ExamCandidate?.data?.map((order, idx) => (
+                        {ExamCandidate?.data?.sort((a, b) => b.marks - a.marks)?.map((order, idx) => (
                             <TableRow key={order.id} href={`/home/exam/${id}/candidate/${order.id}/`}>
                                 <TableCell>{idx + 1}</TableCell>
                                 <TableCell className="text-zinc-500">{order.marks}</TableCell>
