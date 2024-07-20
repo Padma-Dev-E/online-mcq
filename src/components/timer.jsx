@@ -36,6 +36,7 @@ const TimeIndicator = ({time = 0, onComplete}) => {
 
     return (
         <Countdown
+            overtime={true}
             date={Date.now() + time * 60 * 1000}
             renderer={renderer}
             onComplete={onComplete}

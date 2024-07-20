@@ -42,9 +42,9 @@ export default function Page() {
         event.preventDefault();
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
-        if (data.start_time) {
-            data.start_time = ClientTimeStampToServerTimeStamp(data.start_time);
-        }
+        // if (data.start_time) {
+        //     data.start_time = ClientTimeStampToServerTimeStamp(data.start_time);
+        // }
         dispatch(createExamApi(data))
     };
 
@@ -76,31 +76,31 @@ export default function Page() {
                     </div>
                 </section>
 
-                <Divider className="my-10" soft/>
+                {/*<Divider className="my-10" soft/>*/}
 
-                <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
-                    <div className="space-y-1">
-                        <Subheading>Exam start time</Subheading>
-                        <Text>This will only be used for displaying the start time. You have to manually start the
-                            exam.</Text>
-                    </div>
-                    <div>
-                        <Input aria-label="Exam Start Time" name="start_time" type="datetime-local"
-                               min={getCurrentDateTime()} required/>
-                    </div>
-                </section>
+                {/*<section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">*/}
+                {/*    <div className="space-y-1">*/}
+                {/*        <Subheading>Exam start time</Subheading>*/}
+                {/*        <Text>This will only be used for displaying the start time. You have to manually start the*/}
+                {/*            exam.</Text>*/}
+                {/*    </div>*/}
+                {/*    <div>*/}
+                {/*        <Input aria-label="Exam Start Time" name="start_time" type="datetime-local"*/}
+                {/*               min={getCurrentDateTime()} required/>*/}
+                {/*    </div>*/}
+                {/*</section>*/}
 
-                <Divider className="my-10" soft/>
+                {/*<Divider className="my-10" soft/>*/}
 
-                <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
-                    <div className="space-y-1">
-                        <Subheading>Exam duration</Subheading>
-                        <Text>This is the duration of the exam in minutes.</Text>
-                    </div>
-                    <div className="space-y-4">
-                        <Input type="number" aria-label="Exam Duration" name="duration" defaultValue="60" required/>
-                    </div>
-                </section>
+                {/*<section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">*/}
+                {/*    <div className="space-y-1">*/}
+                {/*        <Subheading>Exam duration</Subheading>*/}
+                {/*        <Text>This is the duration of the exam in minutes.</Text>*/}
+                {/*    </div>*/}
+                {/*    <div className="space-y-4">*/}
+                {/*        <Input type="number" aria-label="Exam Duration" name="duration" defaultValue="60" required/>*/}
+                {/*    </div>*/}
+                {/*</section>*/}
 
                 <Divider className="my-10" soft/>
 

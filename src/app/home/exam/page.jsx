@@ -57,9 +57,9 @@ export default function page() {
                                             <Link href={`/home/exam/${event.id}/`}>{event.exam_name}</Link>
                                         </div>
                                         <div className="text-xs/6 text-zinc-500 flex flex-wrap gap-2">
-                                            <span>
-                                                Duration : {formatMinutes(event.duration)}
-                                            </span>
+                                            {/*<span>*/}
+                                            {/*    Duration : {formatMinutes(event.duration)}*/}
+                                            {/*</span>*/}
                                             {event.status !== "active" &&
                                                 <span>Time
                                                 : {new Date(ServerTimeStampToClientTimeStamp(event.start_time)).toLocaleString()}</span>

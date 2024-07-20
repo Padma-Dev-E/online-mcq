@@ -70,10 +70,10 @@ export default function page({params}) {
             {MyQuestion?.data === -1 ?
                 <div className="text-center text-white mt-10">
                     <Heading>Congratulations!</Heading>
-                    <p className="mt-4">
+                    <p className="mt-4 text-zinc-500 dark:text-zinc-400">
                         You have successfully completed the exam. Thank you for your participation!
                     </p>
-                    <p className="mt-2">
+                    <p className="mt-2 text-zinc-500 dark:text-zinc-400">
                         Your answers have been submitted and will be evaluated shortly.
                     </p>
                 </div> :

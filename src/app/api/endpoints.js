@@ -5,7 +5,7 @@ export const endPoints = {
     },
     exam: {
         list: "exam/",
-        join: "exam/join",
+        join: "exam/join/",
     },
     question: {
         list: "exam/question/",

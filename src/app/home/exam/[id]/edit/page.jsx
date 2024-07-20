@@ -27,8 +27,8 @@ export default function Page({params}) {
 
     const [formData, setFormData] = useState({
         exam_name: '',
-        start_time: '',
-        duration: 60,
+        // start_time: '',
+        // duration: 60,
     });
 
     useEffect(() => {
@@ -43,8 +43,8 @@ export default function Page({params}) {
             const examData = ExamDetails.data;
             setFormData({
                 exam_name: examData.exam_name || '',
-                start_time: new Date(examData.start_time * 1000).toISOString().slice(0, 16) || '',
-                duration: examData.duration || 60,
+                // start_time: new Date(examData.start_time * 1000).toISOString().slice(0, 16) || '',
+                // duration: examData.duration || 60,
             });
         }
     }, [ExamDetails.data]);
@@ -61,9 +61,9 @@ export default function Page({params}) {
         event.preventDefault();
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
-        if (data.start_time) {
-            data.start_time = ClientTimeStampToServerTimeStamp(data.start_time);
-        }
+        // if (data.start_time) {
+        //     data.start_time = ClientTimeStampToServerTimeStamp(data.start_time);
+        // }
         dispatch(ExamUpdateApi(id, data));
     };
 
@@ -117,45 +117,45 @@ export default function Page({params}) {
 
                 <Divider className="my-10" soft/>
 
-                <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
-                    <div className="space-y-1">
-                        <Subheading>Exam start time</Subheading>
-                        <Text>This will only be used for displaying the start time. You have to manually start the
-                            exam.</Text>
-                    </div>
-                    <div>
-                        <Input
-                            aria-label="Exam Start Time"
-                            name="start_time"
-                            type="datetime-local"
-                            value={formData.start_time}
-                            onChange={handleInputChange}
-                            min={getCurrentDateTime()}
-                            required
-                        />
-                    </div>
-                </section>
+                {/*<section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">*/}
+                {/*    <div className="space-y-1">*/}
+                {/*        <Subheading>Exam start time</Subheading>*/}
+                {/*        <Text>This will only be used for displaying the start time. You have to manually start the*/}
+                {/*            exam.</Text>*/}
+                {/*    </div>*/}
+                {/*    <div>*/}
+                {/*        <Input*/}
+                {/*            aria-label="Exam Start Time"*/}
+                {/*            name="start_time"*/}
+                {/*            type="datetime-local"*/}
+                {/*            value={formData.start_time}*/}
+                {/*            onChange={handleInputChange}*/}
+                {/*            min={getCurrentDateTime()}*/}
+                {/*            required*/}
+                {/*        />*/}
+                {/*    </div>*/}
+                {/*</section>*/}
 
-                <Divider className="my-10" soft/>
+                {/*<Divider className="my-10" soft/>*/}
 
-                <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
-                    <div className="space-y-1">
-                        <Subheading>Exam duration</Subheading>
-                        <Text>This is the duration of the exam in minutes.</Text>
-                    </div>
-                    <div className="space-y-4">
-                        <Input
-                            type="number"
-                            aria-label="Exam Duration"
-                            name="duration"
-                            value={formData.duration}
-                            onChange={handleInputChange}
-                            required
-                        />
-                    </div>
-                </section>
+                {/*<section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">*/}
+                {/*    <div className="space-y-1">*/}
+                {/*        <Subheading>Exam duration</Subheading>*/}
+                {/*        <Text>This is the duration of the exam in minutes.</Text>*/}
+                {/*    </div>*/}
+                {/*    <div className="space-y-4">*/}
+                {/*        <Input*/}
+                {/*            type="number"*/}
+                {/*            aria-label="Exam Duration"*/}
+                {/*            name="duration"*/}
+                {/*            value={formData.duration}*/}
+                {/*            onChange={handleInputChange}*/}
+                {/*            required*/}
+                {/*        />*/}
+                {/*    </div>*/}
+                {/*</section>*/}
 
-                <Divider className="my-10" soft/>
+                {/*<Divider className="my-10" soft/>*/}
 
                 <div className="flex justify-end gap-4">
                     <Button type="submit" disabled={ExamUpdate.isLoading}>Save

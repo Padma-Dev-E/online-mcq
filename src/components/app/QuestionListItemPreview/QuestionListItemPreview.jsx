@@ -12,7 +12,7 @@ export const QuestionListItemPreview = memo(({item, idx, showAnswer = false, sel
             return item.answer
         } else {
             if (selected !== undefined) {
-                return selected[0].selected_answer
+                return selected[0]?.selected_answer
             } else {
                 return ''
             }
@@ -51,17 +51,26 @@ export const QuestionListItemPreview = memo(({item, idx, showAnswer = false, sel
         }
         {selected !== undefined &&
             <div className={"mt-4 inline-flex items-center"}>
-                <Subheading>Selected Answer : <span
-                    className={item.answer === selected[0].selected_answer ? 'text-green-400' : 'text-red-400'}>{item.options[selected[0].selected_answer]}</span>
-                </Subheading>
-                {item.answer === selected[0].selected_answer ?
-                    <div className={"pl-1"}>
-                        <CheckIcon className="size-5" style={{fill: 'rgb(74 222 128)'}}/>
-                    </div> :
-                    <div className={"pl-1"}>
-                        <XMarkIcon className="size-5" style={{fill: 'rgb(248 113 113)'}}/>
-                    </div>
+                {selected[0] ?
+                    <Subheading>Selected Answer : <span
+                        className={item.answer === selected[0]?.selected_answer ? 'text-green-400' : 'text-red-400'}>{item.options[selected[0]?.selected_answer]}</span>
+                    </Subheading> :
+                    <Subheading><span
+                        className={'text-red-400'}>Not Answered</span>
+                    </Subheading>
                 }
+                {selected[0] &&
+                    <>
+                        {item.answer === selected[0]?.selected_answer ?
+                            <div className={"pl-1"}>
+                                <CheckIcon className="size-5" style={{fill: 'rgb(74 222 128)'}}/>
+                            </div> :
+                            <div className={"pl-1"}>
+                                <XMarkIcon className="size-5" style={{fill: 'rgb(248 113 113)'}}/>
+                            </div>
+                        }</>
+                }
+
             </div>
         }
 

@@ -46,11 +46,19 @@ function AccountDropdownMenu({anchor, isAdmin}) {
                 if (isAdmin) {
                     dispatch(logoutApi(payload))
                 } else {
-                    eraseClientCookie(tokenKey)
-                    eraseClientCookie(refreshKey)
-                    eraseClientCookie(examTokenKey)
-                    eraseClientCookie("ld")
-                    router.push("/auth/login")
+                    if (getClientCookie(examTokenKey)) {
+                        eraseClientCookie(tokenKey)
+                        eraseClientCookie(refreshKey)
+                        eraseClientCookie(examTokenKey)
+                        eraseClientCookie("ld")
+                        router.push("/exam/completed/join/")
+                    } else {
+                        eraseClientCookie(tokenKey)
+                        eraseClientCookie(refreshKey)
+                        eraseClientCookie(examTokenKey)
+                        eraseClientCookie("ld")
+                        router.push("/auth/login")
+                    }
                 }
             }}>
                 <ArrowRightStartOnRectangleIcon/>

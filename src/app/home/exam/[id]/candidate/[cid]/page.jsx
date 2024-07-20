@@ -48,9 +48,9 @@ export default function page({params}) {
                                 color={ExamDetails?.data?.status === 'ongoing' ? 'lime' : 'zinc'}>{ExamDetails?.data?.status}</Badge>
                         </div>
                         <div className="text-xs/6 text-zinc-500 flex flex-wrap gap-2">
-                                            <span>
-                                                Duration : {formatMinutes(ExamDetails?.data?.duration)}
-                                            </span>
+                                            {/*<span>*/}
+                                            {/*    Duration : {formatMinutes(ExamDetails?.data?.duration)}*/}
+                                            {/*</span>*/}
                             {ExamDetails?.data?.status !== "active" ?
                                 <span>Time
                                                 : {new Date(ServerTimeStampToClientTimeStamp(ExamDetails?.data?.start_time)).toLocaleString()}</span>

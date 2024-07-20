@@ -45,8 +45,7 @@ export function formatMinutes(minutes) {
 }
 
 export const timeLeft = (st, duration) => {
-    let end_time = st + (duration * 60)
+    // let end_time = st + (duration * 60)
     let local = ClientTimeStampToServerTimeStamp(new Date().getTime())
-    console.log(local)
-    return (end_time - local) / 60
+    return (st - local) / 60
 }

@@ -44,9 +44,9 @@ export default function page({params}) {
                                 color={ExamDetails?.data?.status === 'ongoing' ? 'lime' : 'zinc'}>{ExamDetails?.data?.status}</Badge>
                         </div>
                         <div className="text-xs/6 text-zinc-500 flex flex-wrap gap-2">
-                                            <span>
-                                                Duration : {formatMinutes(ExamDetails?.data?.duration)}
-                                            </span>
+                                            {/*<span>*/}
+                                            {/*    Duration : {formatMinutes(ExamDetails?.data?.duration)}*/}
+                                            {/*</span>*/}
                             {ExamDetails?.data?.status !== "active" ?
                                 <span>Time
                                                 : {new Date(ServerTimeStampToClientTimeStamp(ExamDetails?.data?.start_time)).toLocaleString()}</span>
@@ -72,7 +72,7 @@ export default function page({params}) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {ExamCandidate?.data?.sort((a, b) => b.marks - a.marks)?.map((order, idx) => (
+                        {ExamCandidate?.data?.slice().sort((a, b) => b.marks - a.marks)?.map((order, idx) => (
                             <TableRow key={order.id} href={`/home/exam/${id}/candidate/${order.id}/`}>
                                 <TableCell>{idx + 1}</TableCell>
                                 <TableCell className="text-zinc-500">{order.marks}</TableCell>

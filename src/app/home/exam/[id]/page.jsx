@@ -8,7 +8,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/navigation";
 import {useDispatch, useSelector} from "react-redux";
 import {downloadCSV, ExamDetailsApi, ExamState, ExamStatusUpdateApi} from "@/app/redux/examReducer/examReducer";
-import {formatMinutes, ServerTimeStampToClientTimeStamp, timeLeft} from "@/app/utils/helper";
+import {ServerTimeStampToClientTimeStamp, timeLeft} from "@/app/utils/helper";
 import TimeIndicator from "@/components/timer";
 import {Stat} from "@/components/Stat";
 import LoadingIcon from "@/components/loading";
@@ -113,9 +113,9 @@ export default function page({params}) {
                                 color={ExamDetails?.data?.status === 'ongoing' ? 'lime' : 'zinc'}>{ExamDetails?.data?.status}</Badge>
                         </div>
                         <div className="text-xs/6 text-zinc-500 flex flex-wrap gap-2">
-                                            <span>
-                                                Duration : {formatMinutes(ExamDetails?.data?.duration)}
-                                            </span>
+                            {/*<span>*/}
+                            {/*    Duration : {formatMinutes(ExamDetails?.data?.duration)}*/}
+                            {/*</span>*/}
                             {ExamDetails?.data?.status !== "active" ?
                                 <span>Time
                                                 : {new Date(ServerTimeStampToClientTimeStamp(ExamDetails?.data?.start_time)).toLocaleString()}</span>
@@ -187,6 +187,29 @@ export default function page({params}) {
 
                 {ExamDetails?.data?.status === "completed" &&
                     <div className="flex gap-4">
+                        <Button onClick={saveQrCode} disabled={qrLoading}>
+                            Save QR
+
+                            {qrLoading &&
+                                <div className={"animate-spin"}>
+                                    <LoadingIcon/>
+                                </div>
+                            }
+                        </Button>
+                        <Button onClick={handleCopy}>
+                            Copy URL
+                        </Button>
+                        <Button disabled={ExamDetails.isLoading} onClick={() => {
+                            dispatch(ExamStatusUpdateApi(id, {status: "ongoing"}))
+                        }}>Restart Exam Again
+
+                            {ExamDetails.isLoading &&
+                                <div className={"animate-spin"}>
+                                    <LoadingIcon/>
+                                </div>
+                            }
+
+                        </Button>
                         <Button onClick={downloadExamParticipantsCSV}>
                             Download report
 
@@ -209,8 +232,8 @@ export default function page({params}) {
                             viewBox={`0 0 256 256`}
                         />
                         <p className={"text-black text-wrap pt-2"}>{ExamDetails?.data?.exam_name}</p>
-                        <p className={"text-gray-700 text-wrap text-sm"}>Duration
-                            : {formatMinutes(ExamDetails?.data?.duration)}</p>
+                        {/*<p className={"text-gray-700 text-wrap text-sm"}>Duration*/}
+                        {/*    : {formatMinutes(ExamDetails?.data?.duration)}</p>*/}
                     </div>
                 </div>
 
@@ -239,7 +262,7 @@ export default function page({params}) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                        {ExamDetails?.data?.top_participants?.sort((a, b) => b.marks - a.marks)?.map((order, idx) => (
+                            {ExamDetails?.data?.top_participants?.slice()?.sort((a, b) => b.marks - a.marks)?.map((order, idx) => (
                                 <TableRow key={order.id} href={`/home/exam/${id}/candidate/${order.id}/`}>
                                     <TableCell>{idx + 1}</TableCell>
                                     <TableCell className="text-zinc-500">{order.marks}</TableCell>
