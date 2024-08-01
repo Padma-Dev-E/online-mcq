@@ -86,6 +86,16 @@ const initialExamState = {
         data: null,
         error: null,
     },
+    AlterExamDetails: {
+        isLoading: false,
+        data: null,
+        error: null,
+    },
+    ResetExamData: {
+        isLoading: false,
+        data: null,
+        error: null,
+    },
 };
 
 export const examSlice = createSlice({
@@ -107,13 +117,15 @@ export const examSlice = createSlice({
         ...createAPIAsyncReducers('ExamCandidate', initialExamState.ExamCandidate),
         ...createAPIAsyncReducers('ExamCandidateDetails', initialExamState.ExamCandidateDetails),
         ...createAPIAsyncReducers('ExamPublicDetails', initialExamState.ExamPublicDetails),
+        ...createAPIAsyncReducers('AlterExamDetails', initialExamState.AlterExamDetails),
+        ...createAPIAsyncReducers('ResetExamData', initialExamState.ResetExamData),
     },
 });
 
-export const listExamApi = () => async (dispatch) => {
+export const listExamApi = (key) => async (dispatch) => {
     dispatch(ExamListRequesting());
     apiService
-        .get(endPoints.exam.list, {})
+        .get(key?`${endPoints.exam.list}?keyword=${key}`:endPoints.exam.list, {})
         .then((response) => {
             dispatch(ExamListSuccess(response.data))
         })
@@ -267,6 +279,33 @@ export const ExamCandidateDetailsApi = (id, part_id) => async (dispatch) => {
         );
 };
 
+
+export const AlterExamCandidateDetailsApi = (id, part_id, data) => async (dispatch) => {
+    dispatch(AlterExamDetailsRequesting());
+    apiService
+        .post(`exam/${id}/participants/${part_id}/answers/`, data)
+        .then((response) => {
+            dispatch(AlterExamDetailsSuccess(response.data))
+            dispatch(ExamCandidateDetailsSuccess(response.data))
+        })
+        .catch((error) =>
+            dispatch(AlterExamDetailsError(formatAxiosErrorMessage(error)))
+        );
+};
+
+export const ResetExamCandidateDataApi = (id, part_id) => async (dispatch) => {
+    dispatch(ResetExamDataRequesting());
+    apiService
+        .delete(`exam/${id}/participants/${part_id}/reset/`, {})
+        .then((response) => {
+            dispatch(ResetExamDataSuccess(response.data))
+            dispatch(ExamCandidateDetailsSuccess(response.data))
+        })
+        .catch((error) =>
+            dispatch(ResetExamDataReset(formatAxiosErrorMessage(error)))
+        );
+};
+
 export const downloadCSV = async (url) => {
     const response = await apiService.get(url, {
         responseType: 'blob',
@@ -339,6 +378,16 @@ export const {
     ExamPublicDetailsSuccess,
     ExamPublicDetailsError,
     ExamPublicDetailsReset,
+
+    AlterExamDetailsRequesting,
+    AlterExamDetailsSuccess,
+    AlterExamDetailsError,
+    AlterExamDetailsReset,
+
+    ResetExamDataRequesting,
+    ResetExamDataSuccess,
+    ResetExamDataError,
+    ResetExamDataReset,
 
 } = examSlice.actions;
 export const ExamState = (state) => state.exam;

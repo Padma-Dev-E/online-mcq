@@ -1,20 +1,40 @@
-import React, {memo} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import "./style.css"
 import {Heading, Subheading} from "@/components/heading";
 import {Radio, RadioField, RadioGroup} from "@/components/radio";
 import {Label} from "@/components/fieldset";
 import {CheckIcon, XMarkIcon} from "@heroicons/react/16/solid";
 
-export const QuestionListItemPreview = memo(({item, idx, showAnswer = false, selected = undefined}) => {
+export const QuestionListItemPreview = memo(({
+                                                 item,
+                                                 idx,
+                                                 showAnswer = false,
+                                                 selected = undefined,
+                                                 editable = false,
+                                                 callback
+                                             }) => {
 
-    const getSelected = () => {
-        if (showAnswer) {
-            return item.answer
-        } else {
+    const [internalSelected, setInternalSelected] = useState('')
+
+    useEffect(() => {
+        if (internalSelected === '') {
             if (selected !== undefined) {
-                return selected[0]?.selected_answer
+                setInternalSelected(selected[0]?.selected_answer)
             } else {
-                return ''
+                if (showAnswer) {
+                    setInternalSelected(item.answer)
+                } else {
+                    setInternalSelected('')
+                }
+            }
+        }
+    }, [selected, showAnswer]);
+
+    const valueUpdate = (value) => {
+        if (editable) {
+            setInternalSelected(value)
+            if (callback) {
+                callback(item.id, value)
             }
         }
     }
@@ -22,7 +42,7 @@ export const QuestionListItemPreview = memo(({item, idx, showAnswer = false, sel
     return (<div className={""}>
         <Heading>{idx + 1}. {item.question}</Heading>
         <RadioGroup className={"grid md:grid-cols-2 mt-4"}
-                    value={getSelected()}>
+                    value={internalSelected} onChange={valueUpdate}>
             <RadioField>
                 <Radio value={"optionA"}/>
                 <Label>{item.options.optionA}</Label>

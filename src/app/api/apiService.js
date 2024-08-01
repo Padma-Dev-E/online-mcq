@@ -11,8 +11,8 @@ import {examTokenKey, tokenKey} from "../utils/constants";
 import axios from "axios";
 import {getClientCookie} from "@/app/utils/clientCookie";
 
-// export const base_url = `${process.env.NEXT_PUBLIC_BASE_SERVER_URL}`;
-export const base_url = `https://mcq_server.box.kitty-dev.com`;
+export const base_url = `${process.env.NEXT_PUBLIC_BASE_SERVER_URL}`;
+// export const base_url = `https://mcq_server.box.kitty-dev.com`;
 
 
 const apiService = () => {

@@ -14,6 +14,7 @@ import {Stat} from "@/components/Stat";
 import LoadingIcon from "@/components/loading";
 import QRCode from "react-qr-code";
 import {toPng} from "html-to-image";
+import {Alert, AlertActions, AlertDescription, AlertTitle} from "@/components/alert";
 
 export default function page({params}) {
 
@@ -83,7 +84,7 @@ export default function page({params}) {
                 const url = window.URL.createObjectURL(new Blob([csvBlob], {type: 'text/csv'}));
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', `participants_${id}.csv`);
+                link.setAttribute('download', `${ExamDetails?.data?.exam_name?.replaceAll(' ', '_').toLowerCase()}_exam_report.csv`);
                 document.body.appendChild(link);
                 link.click();
                 link.parentNode.removeChild(link);
@@ -93,9 +94,108 @@ export default function page({params}) {
             console.error('Failed to download CSV:', error);
         }
     };
-
+    const [restartExam, setRestartExam] = useState(false)
+    const [startExam, setStartExam] = useState(false)
+    const [endExam, setEndExam] = useState(false)
     return (
         <>
+            <Alert open={restartExam} onClose={() => {
+            }}>
+                <AlertTitle>
+                    Restart Exam
+                </AlertTitle>
+                <AlertDescription>
+                    By restarting the exam, candidates will be able to rejoin and complete it. The exam will remain
+                    active until you end it again.
+                </AlertDescription>
+                <AlertActions>
+                    <div className="mt-4 flex gap-4">
+                        <Button
+                            className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
+                            onClick={() => {
+                                setRestartExam(false)
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
+                            onClick={() => {
+                                setRestartExam(false)
+                                dispatch(ExamStatusUpdateApi(id, {status: "ongoing"}))
+                            }}
+                        >
+                            Proceed
+                        </Button>
+                    </div>
+                </AlertActions>
+            </Alert>
+
+
+            <Alert open={startExam} onClose={() => {
+            }}>
+                <AlertTitle>
+                    Start Exam
+                </AlertTitle>
+                <AlertDescription>
+                    By starting the exam, candidates will be able to join and complete it. The exam will remain
+                    active until you end it again.
+                </AlertDescription>
+                <AlertActions>
+                    <div className="mt-4 flex gap-4">
+                        <Button
+                            className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
+                            onClick={() => {
+                                setStartExam(false)
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
+                            onClick={() => {
+                                setStartExam(false)
+                                dispatch(ExamStatusUpdateApi(id, {status: "ongoing"}))
+                            }}
+                        >
+                            Proceed
+                        </Button>
+                    </div>
+                </AlertActions>
+            </Alert>
+
+
+            <Alert open={endExam} onClose={() => {
+            }}>
+                <AlertTitle>
+                    End Exam
+                </AlertTitle>
+                <AlertDescription>
+                    By ending the exam, candidates will no longer be able to join or complete it.
+                </AlertDescription>
+                <AlertActions>
+                    <div className="mt-4 flex gap-4">
+                        <Button
+                            className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
+                            onClick={() => {
+                                setEndExam(false)
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            className="inline-flex items-center gap-2 rounded-md bg-gray-700 py-1.5 px-3 text-sm/6 font-semibold text-white shadow-inner shadow-white/10 focus:outline-none data-[hover]:bg-gray-600 data-[focus]:outline-1 data-[focus]:outline-white data-[open]:bg-gray-700"
+                            onClick={() => {
+                                setEndExam(false)
+                                dispatch(ExamStatusUpdateApi(id, {status: "completed"}))
+                            }}
+                        >
+                            Proceed
+                        </Button>
+                    </div>
+                </AlertActions>
+            </Alert>
+
             <div className="max-lg:hidden">
                 <div
                     className="inline-flex items-center gap-2 text-sm/6 text-zinc-500 dark:text-zinc-400 cursor-pointer"
@@ -141,7 +241,7 @@ export default function page({params}) {
                             Copy URL
                         </Button>
                         <Button disabled={ExamDetails.isLoading} onClick={() => {
-                            dispatch(ExamStatusUpdateApi(id, {status: "ongoing"}))
+                            setStartExam(true)
                         }}>Start Exam
 
                             {ExamDetails.isLoading &&
@@ -172,7 +272,7 @@ export default function page({params}) {
                             Copy URL
                         </Button>
                         <Button disabled={ExamDetails.isLoading} onClick={() => {
-                            dispatch(ExamStatusUpdateApi(id, {status: "completed"}))
+                            setEndExam(true)
                         }}>End Exam
 
                             {ExamDetails.isLoading &&
@@ -200,7 +300,7 @@ export default function page({params}) {
                             Copy URL
                         </Button>
                         <Button disabled={ExamDetails.isLoading} onClick={() => {
-                            dispatch(ExamStatusUpdateApi(id, {status: "ongoing"}))
+                            setRestartExam(true)
                         }}>Restart Exam Again
 
                             {ExamDetails.isLoading &&
