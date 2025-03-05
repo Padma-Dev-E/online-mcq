@@ -1,5 +1,4 @@
 'use client'
-export const runtime = 'edge';
 import {Badge} from '@/components/badge'
 import {Heading, Subheading} from '@/components/heading'
 import {ChevronLeftIcon} from '@heroicons/react/16/solid'

@@ -1,5 +1,4 @@
 'use client'
-export const runtime = 'edge';
 import {Badge} from '@/components/badge'
 import {Button} from '@/components/button'
 import {Divider} from '@/components/divider'

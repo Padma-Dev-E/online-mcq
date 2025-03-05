@@ -2,7 +2,7 @@ import '@/styles/tailwind.css'
 
 import {ApplicationLayout} from './application-layout'
 import Providers from "@/app/redux/provider";
-export const runtime = 'edge';
+
 export const metadata = {
     title: {
         template: '%s - Online Exam',
