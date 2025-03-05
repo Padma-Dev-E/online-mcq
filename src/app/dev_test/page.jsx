@@ -1,4 +1,5 @@
 'use client'
+export const runtime = 'edge';
 import React from 'react';
 import {getClientCookie} from "@/app/utils/clientCookie";
 import {examTokenKey, refreshKey, tokenKey} from "@/app/utils/constants";

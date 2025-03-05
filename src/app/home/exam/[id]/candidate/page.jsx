@@ -1,4 +1,5 @@
 'use client'
+export const runtime = 'edge';
 import {Badge} from '@/components/badge'
 import {Heading} from '@/components/heading'
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/table'

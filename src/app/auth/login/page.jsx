@@ -1,4 +1,5 @@
 'use client'
+export const runtime = 'edge';
 import {Heading, Subheading} from "@/components/heading";
 import {Input} from "@/components/input";
 import {Button} from "@/components/button";

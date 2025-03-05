@@ -7,6 +7,7 @@
  * Project: sh_mcq_web_next
  */
 'use client'
+export const runtime = 'edge';
 import React, {useEffect} from 'react';
 import {Heading, Subheading} from "@/components/heading";
 import {Divider} from "@/components/divider";

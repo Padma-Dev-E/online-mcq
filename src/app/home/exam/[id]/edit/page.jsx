@@ -1,4 +1,5 @@
 'use client'
+export const runtime = 'edge';
 import React, {useEffect, useState} from 'react';
 import {Heading, Subheading} from "@/components/heading";
 import {Divider} from "@/components/divider";
