@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pages:build": "npx @cloudflare/next-on-pages"
   },
   "dependencies": {
     "@headlessui/react": "^2.1.1",
@@ -25,6 +26,7 @@
     "redux": "^4.1.2"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.7",
     "@reduxjs/toolkit": "^1.8.0",
     "autoprefixer": "^10.4.19",
     "eslint": "^8",
