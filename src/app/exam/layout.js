@@ -1,7 +1,7 @@
 import {ApplicationLayout} from "@/app/home/application-layout";
 import Providers from "@/app/redux/provider";
 import '@/styles/tailwind.css'
-
+export const runtime = 'edge';
 export default function RootLayout({children}) {
     return (
         <html lang="en">
