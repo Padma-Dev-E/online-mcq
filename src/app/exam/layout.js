@@ -3,7 +3,6 @@ import Providers from "@/app/redux/provider";
 import '@/styles/tailwind.css'
 export const runtime = 'edge';
 export default function RootLayout({children}) {
-    export const runtime = 'edge';
     return (
         <html lang="en">
         <head>

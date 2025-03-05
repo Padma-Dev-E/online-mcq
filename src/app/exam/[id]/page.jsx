@@ -21,7 +21,6 @@ import ErrorBox from "@/components/ErrorBox";
 import LoadingIcon from "@/components/loading";
 
 export default function page({params}) {
-    export const runtime = 'edge';
     const {id} = params
     const dispatch = useDispatch()
     const {MyQuestion, ExamPublicDetails, AnswerQuestion} = useSelector(ExamState)
