@@ -9,6 +9,7 @@ import {useEffect} from "react";
 import {refreshKey, tokenKey} from "@/app/utils/constants";
 import {setClientCookie} from "@/app/utils/clientCookie";
 import jwtDecode from 'jsonwebtoken/decode';
+import ErrorBox from "@/components/ErrorBox";
 
 export default function Login() {
     const router = useRouter();
@@ -48,6 +49,9 @@ export default function Login() {
         <div className={"flex w-full h-full items-center justify-center"} style={{height: "100vh"}}>
             <form className="w-full lg:w-1/3 md:w-1/2 flex flex-col gap-5 p-4 md:p-6 lg:p-8" onSubmit={onSubmit}>
                 <Heading>Sign in to Online MCQ</Heading>
+                {Login.error &&
+                    <ErrorBox message={Login.error}/>
+                }
                 <div>
                     <div className="space-y-1">
                         <Subheading>Username</Subheading>

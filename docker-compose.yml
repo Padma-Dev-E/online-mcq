@@ -12,6 +12,8 @@ services:
     build:
       context: .
     restart: always
+    ports:
+      - 3000:3000
     labels:
       - "traefik.enable=true"
       - 'traefik.http.routers.mcq.rule=Host(`mcq.box.kitty-dev.com`)' # will use the wildcard subdomain certificate
@@ -21,3 +23,5 @@ services:
     networks:
       - kdx_external
       - kdx_internal
+
+#kubectl create secret docker-registry kxd-register-secret --docker-server=register.infra.kittxdev.com --docker-username=kittxdev --docker-password=Minnow@2025 -n mcq
