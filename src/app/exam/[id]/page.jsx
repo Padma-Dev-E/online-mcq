@@ -128,7 +128,8 @@ export default function page({params}) {
 
                                         Once all questions are answered, click the "SUBMIT" button to finalize your
                                         submission.
-
+                                    </p>
+                                    <p>
                                         Fellowship Board
                                     </p>
 
