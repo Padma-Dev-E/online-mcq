@@ -6,7 +6,7 @@ import {Input} from "@/components/input";
 import {Button} from "@/components/button";
 import {useRouter} from "next/navigation";
 import {useDispatch, useSelector} from "react-redux";
-import {ExamState, joinExamApi, JoinExamReset} from "@/app/redux/examReducer/examReducer";
+import {examInfoApi, ExamState, joinExamApi, JoinExamReset} from "@/app/redux/examReducer/examReducer";
 import jwtDecode from "jsonwebtoken/decode";
 import {setClientCookie} from "@/app/utils/clientCookie";
 import {examTokenKey} from "@/app/utils/constants";
@@ -17,14 +17,22 @@ export default function Page({params}) {
     const router = useRouter();
     const dispatch = useDispatch();
     const {id} = params;
-    const {JoinExam} = useSelector(ExamState);
+    const {JoinExam, ExamInfo} = useSelector(ExamState);
     const [ld, setLd] = useState(null);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
             document.title = `Online MCQ | Join`;
         }
+
+        if (id) {
+            dispatch(examInfoApi({exam_id: id}));
+        }
     }, []);
+
+    useEffect(() => {
+        console.log(id)
+    }, [id]);
 
     const setToken = (key, token) => {
         const decodedToken = jwtDecode(token);
@@ -89,17 +97,36 @@ export default function Page({params}) {
         }
     };
 
-    useEffect(() => {
-        console.log("-----Loaded A------")
-    }, []);
 
     return (
         <>
-            {(JoinExam.error || dataError.length > 0) &&
-                <ErrorBox message={JoinExam.error || dataError[0]}/>
+            {(JoinExam.error || dataError.length > 0 || ExamInfo.error) &&
+                <ErrorBox message={JoinExam.error || dataError[0] || ExamInfo.error}/>
             }
+
             <form method="post" className="mx-auto mt-4" onSubmit={handleSubmit}>
-                <Heading>Join Online MCQ</Heading>
+                {ExamInfo.data?.exam_name ?
+                    <div>
+                        <Heading>{ExamInfo.data?.exam_name}</Heading>
+                        <p style={{color: "white", paddingTop: "15px"}}>
+                            Dear Delegates,
+
+                            Thank you for participating in this training course aimed at enhancing knowledge and skills
+                            through a focused and structured program.
+
+                            We kindly request you to complete the post-test and submit your responses. Please note that
+                            the post-test is mandatory for all fellowship candidates (Exam Category).
+
+                            We appreciate your cooperation.
+
+
+                        </p>
+                    </div>
+
+                    :
+                    <Heading>Join Online MCQ</Heading>
+                }
+
                 <Divider className="my-10 mt-6"/>
                 <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
                     <div>

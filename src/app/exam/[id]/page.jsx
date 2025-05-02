@@ -113,7 +113,30 @@ export default function page({params}) {
                                 }
                             </div>
                             <Divider className="my-10" soft/>
+
+                            {MyQuestion?.data?.question_number === ExamPublicDetails?.data?.total_questions - 1 &&
+                                <div>
+
+                                    <Subheading>
+                                        Please ensure that all questions are answered before making your final
+                                        submission.
+                                    </Subheading>
+
+                                    <p style={{color: "white", paddingTop: "15px"}}>
+                                        Please note that
+                                        there are no negative marks for incorrect answers.
+
+                                        Once all questions are answered, click the "SUBMIT" button to finalize your
+                                        submission.
+
+                                        Fellowship Board
+                                    </p>
+
+                                </div>
+                            }
                             <div className="flex justify-end">
+
+
                                 <Button type="submit"
                                         disabled={MyQuestion.isLoading || ExamPublicDetails.isLoading || AnswerQuestion.isLoading}
                                         onClick={submitAnswer}>{MyQuestion?.data?.question_number === ExamPublicDetails?.data?.total_questions - 1 ? 'Submit' : 'Next'}

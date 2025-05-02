@@ -96,6 +96,12 @@ const initialExamState = {
         data: null,
         error: null,
     },
+
+    ExamInfo: {
+        isLoading: false,
+        data: null,
+        error: null,
+    },
 };
 
 export const examSlice = createSlice({
@@ -119,6 +125,7 @@ export const examSlice = createSlice({
         ...createAPIAsyncReducers('ExamPublicDetails', initialExamState.ExamPublicDetails),
         ...createAPIAsyncReducers('AlterExamDetails', initialExamState.AlterExamDetails),
         ...createAPIAsyncReducers('ResetExamData', initialExamState.ResetExamData),
+        ...createAPIAsyncReducers('ExamInfo', initialExamState.ExamInfo),
     },
 });
 
@@ -179,6 +186,18 @@ export const joinExamApi = (data) => async (dispatch) => {
         })
         .catch((error) =>
             dispatch(JoinExamError(formatAxiosErrorMessage(error)))
+        );
+};
+
+export const examInfoApi = (data) => async (dispatch) => {
+    dispatch(ExamInfoRequesting());
+    apiService
+        .post(endPoints.exam.info, data)
+        .then((response) => {
+            dispatch(ExamInfoSuccess(response.data))
+        })
+        .catch((error) =>
+            dispatch(ExamInfoError(formatAxiosErrorMessage(error)))
         );
 };
 
@@ -388,6 +407,12 @@ export const {
     ResetExamDataSuccess,
     ResetExamDataError,
     ResetExamDataReset,
+
+    ExamInfoRequesting,
+    ExamInfoSuccess,
+    ExamInfoError,
+    ExamInfoReset,
+
 
 } = examSlice.actions;
 export const ExamState = (state) => state.exam;
