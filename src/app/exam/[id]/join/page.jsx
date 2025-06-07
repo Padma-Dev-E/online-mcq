@@ -111,7 +111,7 @@ export default function Page({params}) {
                 {ExamInfo.data?.exam_name ?
                     <div>
                         <Heading>{ExamInfo.data?.exam_name}</Heading>
-                        <p style={{color: "white", paddingTop: "15px"}}>
+                        <Subheading>
                             Dear Delegates,
 
                             Thank you for participating in this training course aimed at enhancing knowledge and skills
@@ -123,7 +123,7 @@ export default function Page({params}) {
                             We appreciate your cooperation.
 
 
-                        </p>
+                        </Subheading>
                     </div>
 
                     :
