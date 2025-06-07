@@ -2,10 +2,8 @@
 import React, {useEffect, useState} from 'react';
 import {Heading, Subheading} from "@/components/heading";
 import {Divider} from "@/components/divider";
-import {Text} from "@/components/text";
 import {Input} from "@/components/input";
 import {Button} from "@/components/button";
-import {ClientTimeStampToServerTimeStamp} from "@/app/utils/helper";
 import {useDispatch, useSelector} from "react-redux";
 import {
     ExamDetailsApi,

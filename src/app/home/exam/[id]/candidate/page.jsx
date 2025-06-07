@@ -6,8 +6,14 @@ import {ChevronLeftIcon} from '@heroicons/react/16/solid'
 import React, {useEffect} from "react";
 import {useRouter} from "next/navigation";
 import {useDispatch, useSelector} from "react-redux";
-import {ExamCandidateApi, ExamDetailsApi, ExamState} from "@/app/redux/examReducer/examReducer";
-import {formatMinutes, ServerTimeStampToClientTimeStamp, timeLeft} from "@/app/utils/helper";
+import {
+    ExamCandidateApi,
+    ExamCandidateReset,
+    ExamDetailsApi,
+    ExamDetailsReset,
+    ExamState
+} from "@/app/redux/examReducer/examReducer";
+import {ServerTimeStampToClientTimeStamp, timeLeft} from "@/app/utils/helper";
 import TimeIndicator from "@/components/timer";
 
 export default function page({params}) {
@@ -23,7 +29,15 @@ export default function page({params}) {
         }
         dispatch(ExamDetailsApi(id))
         dispatch(ExamCandidateApi(id))
+        return () => {
+            dispatch(ExamDetailsReset())
+            dispatch(ExamCandidateReset())
+        }
     }, []);
+
+    if (ExamDetails.isLoading || ExamCandidate.isLoading) {
+        return <p>Loading Exam Candidates...</p>
+    }
 
     return (
         <>
@@ -44,9 +58,9 @@ export default function page({params}) {
                                 color={ExamDetails?.data?.status === 'ongoing' ? 'lime' : 'zinc'}>{ExamDetails?.data?.status}</Badge>
                         </div>
                         <div className="text-xs/6 text-zinc-500 flex flex-wrap gap-2">
-                                            {/*<span>*/}
-                                            {/*    Duration : {formatMinutes(ExamDetails?.data?.duration)}*/}
-                                            {/*</span>*/}
+                            {/*<span>*/}
+                            {/*    Duration : {formatMinutes(ExamDetails?.data?.duration)}*/}
+                            {/*</span>*/}
                             {ExamDetails?.data?.status !== "active" ?
                                 <span>Time
                                                 : {new Date(ServerTimeStampToClientTimeStamp(ExamDetails?.data?.start_time)).toLocaleString()}</span>

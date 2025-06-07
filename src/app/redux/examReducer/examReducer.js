@@ -36,6 +36,12 @@ const initialExamState = {
         data: null,
         error: null,
     },
+
+    UpdateQuestion: {
+        isLoading: false,
+        data: null,
+        error: null,
+    },
     QuestionList: {
         isLoading: false,
         data: null,
@@ -102,6 +108,12 @@ const initialExamState = {
         data: null,
         error: null,
     },
+
+    GetQuestion: {
+        isLoading: false,
+        data: null,
+        error: null,
+    },
 };
 
 export const examSlice = createSlice({
@@ -126,13 +138,15 @@ export const examSlice = createSlice({
         ...createAPIAsyncReducers('AlterExamDetails', initialExamState.AlterExamDetails),
         ...createAPIAsyncReducers('ResetExamData', initialExamState.ResetExamData),
         ...createAPIAsyncReducers('ExamInfo', initialExamState.ExamInfo),
+        ...createAPIAsyncReducers('GetQuestion', initialExamState.GetQuestion),
+        ...createAPIAsyncReducers('UpdateQuestion', initialExamState.UpdateQuestion),
     },
 });
 
 export const listExamApi = (key) => async (dispatch) => {
     dispatch(ExamListRequesting());
     apiService
-        .get(key?`${endPoints.exam.list}?keyword=${key}`:endPoints.exam.list, {})
+        .get(key ? `${endPoints.exam.list}?keyword=${key}` : endPoints.exam.list, {})
         .then((response) => {
             dispatch(ExamListSuccess(response.data))
         })
@@ -174,6 +188,18 @@ export const createQuestionApi = (data) => async (dispatch) => {
         })
         .catch((error) =>
             dispatch(QuestionCreateError(formatAxiosErrorMessage(error)))
+        );
+};
+
+export const updateQuestionApi = (data) => async (dispatch) => {
+    dispatch(UpdateQuestionRequesting());
+    apiService
+        .patch(endPoints.question.list, data)
+        .then((response) => {
+            dispatch(UpdateQuestionSuccess(response.data))
+        })
+        .catch((error) =>
+            dispatch(UpdateQuestionError(formatAxiosErrorMessage(error)))
         );
 };
 
@@ -325,6 +351,18 @@ export const ResetExamCandidateDataApi = (id, part_id) => async (dispatch) => {
         );
 };
 
+export const GetExamQuestionDataApi = (id, question_id) => async (dispatch) => {
+    dispatch(GetQuestionRequesting());
+    apiService
+        .get(`exam/${id}/questions/${question_id}/`, {})
+        .then((response) => {
+            dispatch(GetQuestionSuccess(response.data))
+        })
+        .catch((error) =>
+            dispatch(GetQuestionReset(formatAxiosErrorMessage(error)))
+        );
+};
+
 export const downloadCSV = async (url) => {
     const response = await apiService.get(url, {
         responseType: 'blob',
@@ -412,6 +450,16 @@ export const {
     ExamInfoSuccess,
     ExamInfoError,
     ExamInfoReset,
+
+    GetQuestionRequesting,
+    GetQuestionSuccess,
+    GetQuestionError,
+    GetQuestionReset,
+
+    UpdateQuestionRequesting,
+    UpdateQuestionSuccess,
+    UpdateQuestionError,
+    UpdateQuestionReset,
 
 
 } = examSlice.actions;

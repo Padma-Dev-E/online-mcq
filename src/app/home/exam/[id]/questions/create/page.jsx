@@ -46,20 +46,35 @@ export default function Page({params}) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
         const formData = new FormData(event.target);
-        const data = Object.fromEntries(formData.entries());
-        const payload = {
-            question: data.question,
-            options: {
-                optionA: data.optionA,
-                optionB: data.optionB,
-                optionC: data.optionC,
-                optionD: data.optionD
-            },
-            answer: data.answer,
-            exam_id: id
+
+        // Convert options object to JSON string and replace the raw fields
+        const options = {
+            optionA: formData.get("optionA"),
+            optionB: formData.get("optionB"),
+            optionC: formData.get("optionC"),
+            optionD: formData.get("optionD")
+        };
+
+        // Remove the individual option fields (optional step if your backend ignores them)
+        formData.delete("optionA");
+        formData.delete("optionB");
+        formData.delete("optionC");
+        formData.delete("optionD");
+
+        // Add the stringified options
+        formData.set("options", JSON.stringify(options));
+
+        // Add exam_id to formData
+        formData.set("exam_id", id);
+        const pictureFile = formData.get("question_picture");
+        if (!pictureFile || pictureFile.size === 0) {
+            // No file selected → remove field
+            formData.delete("question_picture");
         }
-        dispatch(createQuestionApi(payload))
+        // Now send formData directly
+        dispatch(createQuestionApi(formData));
     };
 
 
@@ -93,6 +108,26 @@ export default function Page({params}) {
                         </div>
                     </div>
                 </section>
+
+                <section className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+                    <div>
+                        <Subheading>Question Image (optional)</Subheading>
+                        <div className="mt-4">
+                            <input
+                                type="file"
+                                name="question_picture"
+                                accept="image/*"
+                                className="block w-full text-sm text-gray-500
+                           file:mr-4 file:py-2 file:px-4
+                           file:rounded-full file:border-0
+                           file:text-sm file:font-semibold
+                           file:bg-blue-50 file:text-blue-700
+                           hover:file:bg-blue-100"
+                            />
+                        </div>
+                    </div>
+                </section>
+
 
                 <Divider className="my-10" soft/>
 

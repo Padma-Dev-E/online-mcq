@@ -97,6 +97,9 @@ export default function Page({params}) {
         }
     };
 
+    if (ExamInfo.isLoading){
+        return <Heading>Fetching Exam details...</Heading>
+    }
 
     return (
         <>

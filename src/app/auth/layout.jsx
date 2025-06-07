@@ -20,7 +20,7 @@ export default async function RootLayout({children}) {
         <head>
             <link rel="icon" id="favicon"
                   href="https://ik.imagekit.io/kittydev/KittXDev/KittXdev_x_white_icon_uOCkfhTIz.svg"/>
-                <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
+                <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
                 <link rel="preconnect" href="https://rsms.me/"/>
                 <link rel="stylesheet" href="https://rsms.me/inter/inter.css"/>
         </head>

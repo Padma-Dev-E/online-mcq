@@ -9,8 +9,11 @@ import {
     AlterExamCandidateDetailsApi,
     AlterExamDetailsReset,
     ExamCandidateDetailsApi,
+    ExamCandidateDetailsReset,
     ExamDetailsApi,
-    ExamState, ResetExamCandidateDataApi
+    ExamDetailsReset,
+    ExamState,
+    ResetExamCandidateDataApi
 } from "@/app/redux/examReducer/examReducer";
 import {ServerTimeStampToClientTimeStamp} from "@/app/utils/helper";
 import {QuestionListItemPreview} from "@/components/app/QuestionListItemPreview/QuestionListItemPreview";
@@ -34,6 +37,12 @@ export default function page({params}) {
         }
         dispatch(ExamDetailsApi(id))
         dispatch(ExamCandidateDetailsApi(id, cid))
+
+
+        return () => {
+            dispatch(ExamDetailsReset())
+            dispatch(ExamCandidateDetailsReset())
+        }
     }, []);
 
     const [editable, setEditable] = useState(false)
@@ -83,6 +92,10 @@ export default function page({params}) {
     }, [AlterExamDetails]);
 
     const [reexamConfirmation, setReexamConfirmation] = useState(false)
+
+    if (ExamDetails.isLoading || ExamCandidateDetails.isLoading) {
+        return <p>Loading...</p>
+    }
 
     return (
         <>
@@ -208,30 +221,28 @@ export default function page({params}) {
                     value={ExamCandidateDetails?.data?.participant?.marks ?? 0}
                 />
             </div>
-            {ExamDetails?.data?.status === "completed" &&
-                <>
-                    <Subheading className="mt-12">Answer card</Subheading>
-                    <div className={"mt-4"} key={screenId}>
-                        {ExamCandidateDetails?.data?.questions?.length > 0 ?
-                            <>{ExamCandidateDetails.data.questions?.map((question, idx) => {
-                                return <>
-                                    <QuestionListItemPreview showAnswer={true} item={question}
-                                                             editable={editable}
-                                                             callback={newUpdatedAnswer}
-                                                             selected={ExamCandidateDetails?.data?.selected_answers?.filter(i => i.question_id === question.id)}
-                                                             idx={idx}/><Divider
-                                    className="my-10" soft/></>
-                            })}</> :
-                            <>
-                                <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                                    <p>No questions found add new</p>
-                                </div>
-                            </>
-                        }
-                    </div>
+            <>
+                <Subheading className="mt-12">Answer card</Subheading>
+                <div className={"mt-4"} key={screenId}>
+                    {ExamCandidateDetails?.data?.questions?.length > 0 ?
+                        <>{ExamCandidateDetails.data.questions?.map((question, idx) => {
+                            return <>
+                                <QuestionListItemPreview examId={id} showAnswer={true} item={question}
+                                                         editable={editable}
+                                                         callback={newUpdatedAnswer}
+                                                         selected={ExamCandidateDetails?.data?.selected_answers?.filter(i => i.question_id === question.id)}
+                                                         idx={idx}/><Divider
+                                className="my-10" soft/></>
+                        })}</> :
+                        <>
+                            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                                <p>No questions found add new</p>
+                            </div>
+                        </>
+                    }
+                </div>
 
-                </>
-            }
+            </>
         </>
     )
 }

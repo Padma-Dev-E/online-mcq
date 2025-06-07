@@ -4,13 +4,17 @@ import {Heading, Subheading} from "@/components/heading";
 import {Radio, RadioField, RadioGroup} from "@/components/radio";
 import {Label} from "@/components/fieldset";
 import {CheckIcon, XMarkIcon} from "@heroicons/react/16/solid";
+import {ImagePreviewWithModal} from "@/components/ImagePreviewWithModal";
+import {Link} from "@/components/link";
 
 export const QuestionListItemPreview = memo(({
                                                  item,
                                                  idx,
+                                                 examId,
                                                  showAnswer = false,
                                                  selected = undefined,
                                                  editable = false,
+                                                 updateQuestions = false,
                                                  callback
                                              }) => {
 
@@ -39,8 +43,18 @@ export const QuestionListItemPreview = memo(({
         }
     }
 
+    const [model, setModel] = useState(false)
+
     return (<div className={""}>
         <Heading>{idx + 1}. {item.question}</Heading>
+
+        {updateQuestions &&
+            <Link href={`/home/exam/${examId}/questions/${item.id}/edit/`}>Edit</Link>
+        }
+
+
+        <ImagePreviewWithModal imageUrl={item?.question_picture}/>
+
         <RadioGroup className={"grid md:grid-cols-2 mt-4"}
                     value={internalSelected} onChange={valueUpdate}>
             <RadioField>

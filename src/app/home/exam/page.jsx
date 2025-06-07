@@ -9,7 +9,7 @@ import {Link} from '@/components/link'
 import {EllipsisVerticalIcon} from '@heroicons/react/16/solid'
 import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {ExamState, listExamApi} from "@/app/redux/examReducer/examReducer";
+import {ExamListReset, ExamState, listExamApi} from "@/app/redux/examReducer/examReducer";
 import {useRouter} from "next/navigation";
 import {ServerTimeStampToClientTimeStamp, timeLeft} from "@/app/utils/helper";
 import TimeIndicator from "@/components/timer";
@@ -28,10 +28,18 @@ export default function page() {
     }, [search]);
 
     useEffect(() => {
+        return () => dispatch(ExamListReset())
+    }, []);
+
+    useEffect(() => {
         if (typeof window !== 'undefined') {
             document.title = "Online MCQ | Exams";
         }
     }, []);
+
+    if (ExamList.isLoading) {
+        return <p>Loading Exams...</p>
+    }
 
     return (
         <>

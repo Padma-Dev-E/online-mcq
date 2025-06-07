@@ -7,7 +7,13 @@ import {ChevronLeftIcon} from '@heroicons/react/16/solid'
 import React, {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/navigation";
 import {useDispatch, useSelector} from "react-redux";
-import {downloadCSV, ExamDetailsApi, ExamState, ExamStatusUpdateApi} from "@/app/redux/examReducer/examReducer";
+import {
+    downloadCSV,
+    ExamDetailsApi,
+    ExamDetailsReset,
+    ExamState,
+    ExamStatusUpdateApi
+} from "@/app/redux/examReducer/examReducer";
 import {ServerTimeStampToClientTimeStamp, timeLeft} from "@/app/utils/helper";
 import TimeIndicator from "@/components/timer";
 import {Stat} from "@/components/Stat";
@@ -28,6 +34,7 @@ export default function page({params}) {
             document.title = "Online MCQ | Exam";
         }
         dispatch(ExamDetailsApi(id))
+        return () => dispatch(ExamDetailsReset())
     }, []);
 
     useEffect(() => {
@@ -97,6 +104,10 @@ export default function page({params}) {
     const [restartExam, setRestartExam] = useState(false)
     const [startExam, setStartExam] = useState(false)
     const [endExam, setEndExam] = useState(false)
+
+    if (ExamDetails.isLoading) {
+        return <p>Loading Exam details...</p>
+    }
     return (
         <>
             <Alert open={restartExam} onClose={() => {
@@ -331,9 +342,26 @@ export default function page({params}) {
                             value={getUrl()}
                             viewBox={`0 0 256 256`}
                         />
-                        <p className={"text-black text-wrap pt-2"}>{ExamDetails?.data?.exam_name}</p>
+                        <p className={"text-black text-wrap pt-2"} style={{
+                            fontSize: 13.5,
+                            wordBreak: 'break-all',
+                            overflowWrap: 'break-word',
+                            fontWeight: "bold"
+                        }}>{ExamDetails?.data?.exam_name}</p>
                         {/*<p className={"text-gray-700 text-wrap text-sm"}>Duration*/}
                         {/*    : {formatMinutes(ExamDetails?.data?.duration)}</p>*/}
+                        <a
+                            className="text-blue-500 pt-2"
+                            style={{
+                                fontSize: 13,
+                                wordBreak: 'break-all',
+                                overflowWrap: 'break-word'
+                            }}
+                            href={getUrl()}
+                        >
+                            {getUrl()}
+                        </a>
+
                     </div>
                 </div>
 

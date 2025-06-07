@@ -10,8 +10,14 @@ import {Checkbox, CheckboxField} from "@/components/checkbox";
 import {Label} from "@/components/fieldset";
 import {Button} from "@/components/button";
 import {useDispatch, useSelector} from "react-redux";
-import {ExamDetailsApi, ExamState, listQuestionApi} from "@/app/redux/examReducer/examReducer";
-import {formatMinutes, ServerTimeStampToClientTimeStamp} from "@/app/utils/helper";
+import {
+    ExamDetailsApi,
+    ExamDetailsReset,
+    ExamState,
+    listQuestionApi,
+    QuestionListReset
+} from "@/app/redux/examReducer/examReducer";
+import {ServerTimeStampToClientTimeStamp} from "@/app/utils/helper";
 
 export default function page({params}) {
     const router = useRouter()
@@ -25,6 +31,11 @@ export default function page({params}) {
         }
         dispatch(listQuestionApi(id))
         dispatch(ExamDetailsApi(id))
+
+        return () => {
+            dispatch(ExamDetailsReset())
+            dispatch(QuestionListReset())
+        }
     }, []);
 
 
@@ -37,6 +48,10 @@ export default function page({params}) {
     }, [ExamDetails]);
 
     const [showAnswers, setShowAnswers] = useState(false);
+
+    if (QuestionList.isLoading || ExamDetails.isLoading) {
+        return <p>Loading Questions...</p>
+    }
 
     return (
         <>
@@ -57,9 +72,9 @@ export default function page({params}) {
                                 color={ExamDetails?.data?.status === 'ongoing' ? 'lime' : 'zinc'}>{ExamDetails?.data?.status}</Badge>
                         </div>
                         <div className="text-xs/6 text-zinc-500 flex flex-wrap gap-2">
-                                            {/*<span>*/}
-                                            {/*    Duration : {formatMinutes(ExamDetails?.data?.duration)}*/}
-                                            {/*</span>*/}
+                            {/*<span>*/}
+                            {/*    Duration : {formatMinutes(ExamDetails?.data?.duration)}*/}
+                            {/*</span>*/}
                             {ExamDetails?.data?.status !== "active" &&
                                 <span>Time
                                                 : {new Date(ServerTimeStampToClientTimeStamp(ExamDetails?.data?.start_time)).toLocaleString()}</span>
@@ -84,7 +99,8 @@ export default function page({params}) {
             <div className={"mt-4"}>
                 {QuestionList.data?.length > 0 ?
                     <>{QuestionList.data?.map((question, idx) => {
-                        return <><QuestionListItemPreview showAnswer={showAnswers} item={question} idx={idx}/><Divider
+                        return <><QuestionListItemPreview examId={id} updateQuestions={true} showAnswer={showAnswers}
+                                                          item={question} idx={idx}/><Divider
                             className="my-10" soft/></>
                     })}</> :
                     <>

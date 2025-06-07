@@ -5,7 +5,7 @@ export default function RootLayout({children}) {
     return (
         <html lang="en">
         <head>
-            <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
+            <meta httpEquiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
             <link rel="icon" id="favicon"
                   href="https://ik.imagekit.io/kittydev/KittXDev/KittXdev_x_white_icon_uOCkfhTIz.svg"/>
         </head>
