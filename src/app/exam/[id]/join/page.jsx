@@ -30,9 +30,9 @@ export default function Page({params}) {
         }
     }, []);
 
-    useEffect(() => {
-        console.log(id)
-    }, [id]);
+    // useEffect(() => {
+        // console.log(id)
+    // }, [id]);
 
     const setToken = (key, token) => {
         const decodedToken = jwtDecode(token);

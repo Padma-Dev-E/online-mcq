@@ -98,7 +98,7 @@ export default function page({params}) {
                 setDownloadCSVLoading(false)
             }
         } catch (error) {
-            console.error('Failed to download CSV:', error);
+            // console.error('Failed to download CSV:', error);
         }
     };
     const [restartExam, setRestartExam] = useState(false)

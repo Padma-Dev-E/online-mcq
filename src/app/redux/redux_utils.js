@@ -158,7 +158,7 @@ export const DownloadFile = (url, fileName) => {
     fetch(url, {method: "get", mode: "no-cors"})
         .then((res) => {
             res.blob().then(res => {
-                console.log(res)
+                // console.log(res)
             })
             return res.blob()
         })

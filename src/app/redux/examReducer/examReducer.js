@@ -114,6 +114,11 @@ const initialExamState = {
         data: null,
         error: null,
     },
+    DuplicateExam: {
+        isLoading: false,
+        data: null,
+        error: null,
+    },
 };
 
 export const examSlice = createSlice({
@@ -140,6 +145,7 @@ export const examSlice = createSlice({
         ...createAPIAsyncReducers('ExamInfo', initialExamState.ExamInfo),
         ...createAPIAsyncReducers('GetQuestion', initialExamState.GetQuestion),
         ...createAPIAsyncReducers('UpdateQuestion', initialExamState.UpdateQuestion),
+        ...createAPIAsyncReducers('DuplicateExam', initialExamState.DuplicateExam),
     },
 });
 
@@ -370,6 +376,18 @@ export const downloadCSV = async (url) => {
     return response.data;
 };
 
+export const DuplicateExamApi = (data) => async (dispatch) => {
+    dispatch(DuplicateExamRequesting());
+    apiService
+        .post(`exam/duplicate/`, data)
+        .then((response) => {
+            dispatch(DuplicateExamSuccess(response.data))
+        })
+        .catch((error) =>
+            dispatch(DuplicateExamError(formatAxiosErrorMessage(error)))
+        );
+};
+
 export const {
     ExamListRequesting,
     ExamListSuccess,
@@ -455,6 +473,11 @@ export const {
     GetQuestionSuccess,
     GetQuestionError,
     GetQuestionReset,
+
+    DuplicateExamRequesting,
+    DuplicateExamSuccess,
+    DuplicateExamError,
+    DuplicateExamReset,
 
     UpdateQuestionRequesting,
     UpdateQuestionSuccess,
