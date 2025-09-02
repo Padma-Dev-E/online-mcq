@@ -12,6 +12,7 @@ import {setClientCookie} from "@/app/utils/clientCookie";
 import {examTokenKey} from "@/app/utils/constants";
 import ErrorBox from "@/components/ErrorBox";
 import LoadingIcon from "@/components/loading";
+import {Select} from "@/components/select";
 
 export default function Page({params}) {
     const router = useRouter();
@@ -31,7 +32,7 @@ export default function Page({params}) {
     }, []);
 
     // useEffect(() => {
-        // console.log(id)
+    // console.log(id)
     // }, [id]);
 
     const setToken = (key, token) => {
@@ -86,6 +87,9 @@ export default function Page({params}) {
             name: data.name.toLowerCase(),
             email: data.email.toLowerCase(),
             mobile: data.mobile,
+            institute: data.institute,
+            registration: data.registration,
+            group: data.group,
             exam_id: id
         };
 
@@ -97,7 +101,7 @@ export default function Page({params}) {
         }
     };
 
-    if (ExamInfo.isLoading){
+    if (ExamInfo.isLoading) {
         return <Heading>Fetching Exam details...</Heading>
     }
 
@@ -148,6 +152,28 @@ export default function Page({params}) {
                         <Subheading>Mobile</Subheading>
                         <div className={"mt-4"}>
                             <Input name="mobile" required/>
+                        </div>
+                    </div>
+                    <div>
+                        <Subheading>Institute</Subheading>
+                        <div className={"mt-4"}>
+                            <Input name="institute" required/>
+                        </div>
+                    </div>
+                    <div>
+                        <Subheading>Registration</Subheading>
+                        <div className={"mt-4"}>
+                            <Input name="registration" required/>
+                        </div>
+                    </div>
+                    <div>
+                        <Subheading>Group</Subheading>
+                        <div className={"mt-4"}>
+                            <Select name="group" required>
+                                <option selected disabled>Select a group</option>
+                                <option value="a">Group A</option>
+                                <option value="b">Group B</option>
+                            </Select>
                         </div>
                     </div>
                 </section>
