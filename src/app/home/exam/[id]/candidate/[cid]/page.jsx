@@ -193,7 +193,7 @@ export default function page({params}) {
                         </Button>
                     </div>
                 }
-                <div className="flex flex-wrap items-center gap-6">
+                <div className="flex flex-wrap flex-col items-center gap-6">
                     <div>
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                             <Heading>{ExamCandidateDetails?.data?.participant?.name}</Heading>
@@ -206,6 +206,23 @@ export default function page({params}) {
                         <div className="text-xs/6 text-zinc-500 flex flex-wrap gap-2">
                                             <span>
                                                 Email : {ExamCandidateDetails?.data?.participant?.email}
+                                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <div className="text-xs/6 text-zinc-500 flex flex-wrap gap-2">
+                                            <span>
+                                                Institute : {ExamCandidateDetails?.data?.participant?.institute}
+                                            </span>
+                        </div>
+                        <div className="text-xs/6 text-zinc-500 flex flex-wrap gap-2">
+                                            <span>
+                                                Registration : {ExamCandidateDetails?.data?.participant?.registration}
+                                            </span>
+                        </div>
+                        <div className="text-xs/6 text-zinc-500 flex flex-wrap gap-2">
+                                            <span>
+                                                Group : {ExamCandidateDetails?.data?.participant?.group}
                                             </span>
                         </div>
                     </div>

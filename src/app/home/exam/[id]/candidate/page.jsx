@@ -83,6 +83,9 @@ export default function page({params}) {
                             <TableHeader>Rank</TableHeader>
                             <TableHeader>Mark</TableHeader>
                             <TableHeader>Name</TableHeader>
+                            <TableHeader>Institute</TableHeader>
+                            <TableHeader>Registration</TableHeader>
+                            <TableHeader>Group</TableHeader>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -91,6 +94,9 @@ export default function page({params}) {
                                 <TableCell>{idx + 1}</TableCell>
                                 <TableCell className="text-zinc-500">{order.marks}</TableCell>
                                 <TableCell>{order.name}</TableCell>
+                                <TableCell>{order.institute}</TableCell>
+                                <TableCell>{order.registration}</TableCell>
+                                <TableCell>{order.group}</TableCell>
                                 {/*<TableCell className="text-right">US{order}</TableCell>*/}
                             </TableRow>
                         ))}

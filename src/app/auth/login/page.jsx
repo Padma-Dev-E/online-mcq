@@ -5,11 +5,12 @@ import {Button} from "@/components/button";
 import {useRouter} from "next/navigation";
 import {useDispatch, useSelector} from "react-redux";
 import {AuthState, loginApi, LoginReset} from "@/app/redux/authReducer/authReducer";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import {refreshKey, tokenKey} from "@/app/utils/constants";
 import {setClientCookie} from "@/app/utils/clientCookie";
 import jwtDecode from 'jsonwebtoken/decode';
 import ErrorBox from "@/components/ErrorBox";
+import LoadingIcon from "@/components/loading";
 
 export default function Login() {
     const router = useRouter();
@@ -69,7 +70,11 @@ export default function Login() {
                     </div>
                 </div>
                 <div className="flex justify-end gap-4 cursor-pointer">
-                    <Button type="submit">Login</Button>
+                    <Button type="submit">Login {Login.isLoading &&
+                        <div className={"animate-spin"}>
+                            <LoadingIcon/>
+                        </div>
+                    }</Button>
                 </div>
             </form>
         </div>
