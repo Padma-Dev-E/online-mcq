@@ -110,32 +110,17 @@ export default function page({params}) {
                     {(MyQuestion?.data !== -1 && MyQuestion?.data !== null) &&
                         <>
                             <Subheading className="mt-12">Questions
-                                ({MyQuestion?.data?.question_number + 1}/{ExamPublicDetails?.data?.total_questions})</Subheading>
+                                ({MyQuestion?.data?.count_number + 1}/{ExamPublicDetails?.data?.total_questions})</Subheading>
                             <div className={"mt-4"} key={MyQuestion?.data?.id}>
                                 {MyQuestion.data &&
                                     <QuestionListItem item={MyQuestion.data} ref={selected}/>
                                 }
                             </div>
                             <Divider className="my-10" soft/>
-
-                            {MyQuestion?.data?.question_number === ExamPublicDetails?.data?.total_questions - 1 &&
-                                <div>
-
-                                    <p style={{color: "white", paddingTop: "15px"}}>
-                                        Please note that
-                                        there are no negative marks for incorrect answers.
-
-                                        Once all questions are answered, click the "SUBMIT" button to finalize your
-                                        submission.
-                                    </p>
-                                </div>
-                            }
                             <div className="flex justify-end">
-
-
                                 <Button type="submit"
                                         disabled={MyQuestion.isLoading || ExamPublicDetails.isLoading || AnswerQuestion.isLoading}
-                                        onClick={submitAnswer}>{MyQuestion?.data?.question_number === ExamPublicDetails?.data?.total_questions - 1 ? 'Submit' : 'Next'}
+                                        onClick={submitAnswer}>{(MyQuestion?.data?.count_number + 1) === ExamPublicDetails?.data?.total_questions ? 'Submit' : 'Next'}
                                     {(MyQuestion.isLoading || ExamPublicDetails.isLoading || AnswerQuestion.isLoading) &&
                                         <div className={"animate-spin"}>
                                             <LoadingIcon/>
